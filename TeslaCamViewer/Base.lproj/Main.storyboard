@@ -765,19 +765,26 @@
                                 </connections>
                             </button>
                             <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ee4-dY-2X4" userLabel="SpeedControl">
-                                <rect key="frame" x="813" y="19" width="104" height="23"/>
+                                <rect key="frame" x="813" y="19" width="150" height="23"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="4oR-Fz-sCh">
                                     <font key="font" metaFont="system"/>
                                     <segments>
                                         <segment label="1x" width="32" selected="YES"/>
                                         <segment label="2x" width="32" tag="1"/>
                                         <segment label="5x" width="32"/>
+                                        <segment label="10x"/>
                                     </segments>
                                 </segmentedCell>
                                 <connections>
                                     <action selector="playbackSpeedControlTapped:" target="XfG-lQ-9wD" id="0M7-z4-AGJ"/>
                                 </connections>
                             </segmentedControl>
+                            <progressIndicator wantsLayer="YES" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="DOV-Om-Cd0">
+                                <rect key="frame" x="20" y="13" width="400" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="400" id="c6V-oH-Tgw"/>
+                                </constraints>
+                            </progressIndicator>
                         </subviews>
                         <constraints>
                             <constraint firstItem="cV9-XG-drs" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="730" id="9as-n9-p2D"/>
@@ -785,9 +792,11 @@
                             <constraint firstAttribute="bottom" secondItem="Ee4-dY-2X4" secondAttribute="bottom" constant="20" id="BTD-Ml-ozP"/>
                             <constraint firstItem="y0s-0r-cvf" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="CYF-ma-I5Q"/>
                             <constraint firstItem="Ee4-dY-2X4" firstAttribute="leading" secondItem="cV9-XG-drs" secondAttribute="trailing" constant="20" id="FcA-Ds-f1w"/>
+                            <constraint firstItem="DOV-Om-Cd0" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="ZRn-u2-hwc"/>
                             <constraint firstAttribute="trailing" secondItem="y0s-0r-cvf" secondAttribute="trailing" id="arq-rv-pPA"/>
                             <constraint firstAttribute="bottom" secondItem="cV9-XG-drs" secondAttribute="bottom" constant="20" symbolic="YES" id="dWY-zH-Q2q"/>
                             <constraint firstItem="y0s-0r-cvf" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="kDp-Sg-e0N"/>
+                            <constraint firstAttribute="bottom" secondItem="DOV-Om-Cd0" secondAttribute="bottom" constant="14" id="l6Y-ks-NQO"/>
                             <constraint firstItem="cV9-XG-drs" firstAttribute="bottom" secondItem="Ee4-dY-2X4" secondAttribute="bottom" id="qHm-mS-8Vr"/>
                         </constraints>
                     </view>
@@ -795,6 +804,7 @@
                         <outlet property="centerPlayerView" destination="kxP-4Q-8tB" id="giM-5P-Rgv"/>
                         <outlet property="leftPlayerView" destination="n04-2u-Otx" id="idf-QA-DdD"/>
                         <outlet property="playButton" destination="cV9-XG-drs" id="tR0-zp-Hna"/>
+                        <outlet property="progressBar" destination="DOV-Om-Cd0" id="33a-u3-Ocs"/>
                         <outlet property="rightPlayerView" destination="ApR-pf-1xc" id="TyW-1H-bkt"/>
                         <outlet property="speedSegmentControl" destination="Ee4-dY-2X4" id="eYp-Pd-fYN"/>
                     </connections>
