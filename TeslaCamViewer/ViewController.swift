@@ -19,19 +19,20 @@ class ViewController: NSViewController {
     var leftAVPlayer: AVPlayer?
     var centerAVPlayer: AVPlayer?
     var rightAVPlayer: AVPlayer?
-    var avPlayers: [AVPlayer]?
+    var avPlayers = [AVPlayer]()
 
     var leftTimeObserver: Any?
     var centerTimeObserver: Any?
     var rightTimeObserver: Any?
+    var timeObservers = [Any]()
 
     var progressDict = [AVPlayer: Double]()
     var leftProgress: CMTime?
     var centerProgress: CMTime?
     var rightProgress: CMTime?
 
-    var videoKeysRemaining: [Date]?
     var videos: DirectoryCrawler?
+    var currVideoIndex: Int = 0
 
     //MARK: Reactive properties
     var isPlaying: Bool = false {
@@ -41,7 +42,12 @@ class ViewController: NSViewController {
     }
     var playbackRate: Float = 1.0 {
         didSet {
-            avPlayers?.forEach({ $0.rate = playbackRate })
+            avPlayers.forEach({ $0.rate = playbackRate })
+        }
+    }
+    override var title: String? {
+        didSet {
+            self.view.window?.title = title ?? ""
         }
     }
 
@@ -62,13 +68,17 @@ class ViewController: NSViewController {
         self.videos = DirectoryCrawler()
 
         //TODO: No crash operator
-        // for testing
-        let prefixedVideoKeys = videos!.videoDictionary.keys.sorted().dropFirst(8)
-
-        let earliestDate = prefixedVideoKeys.last!
-        self.videoKeysRemaining = prefixedVideoKeys.dropLast()
-        let firstVideo = videos!.videoDictionary[earliestDate]!
+        let firstVideo = videos!.videoDictionary[videos!.videoDictionary.keys.sorted().first!]!
         setVideoPlayers(to: firstVideo, playAutomatically: false)
+    }
+
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        updateVideoWindowTitle()
+    }
+
+    func updateVideoWindowTitle() {
+        self.title = "Video \(currVideoIndex + 1)/\((videos?.videoDictionary.keys.count ?? 0))"
     }
 
     // Adds a time observer for updating the progress bar
@@ -94,9 +104,25 @@ class ViewController: NSViewController {
         return timeObserverToken
     }
 
+    func tearDownPollingTimers() {
+        for (player, observer) in zip(avPlayers, timeObservers) {
+            player.removeTimeObserver(observer)
+        }
+    }
+
     func refreshProgressBar() {
         // Take the largest of all, since some videos may not load in triplets.
         self.progressBar.doubleValue = self.progressDict.values.max() ?? 0
+    }
+
+    func askToDeleteSeenVideos() -> Bool {
+        let alert = NSAlert()
+        alert.messageText = "Do you want to delete all seen videos?"
+        alert.informativeText = "This will delete the stuff you loaded yo."
+        alert.alertStyle = .critical
+        alert.addButton(withTitle: "Delete Videos")
+        alert.addButton(withTitle: "Cancel")
+        return alert.runModal() == .alertFirstButtonReturn
     }
 
     // Calculates if any of the three videos have ended, and if so,
@@ -106,17 +132,24 @@ class ViewController: NSViewController {
         if currentProgress >= 100 {
 
             // Play next video, if we have one
-            if (self.videoKeysRemaining?.count ?? 0) > 0 {
+            if currVideoIndex < (videos?.videoDictionary.keys.count ?? 0) - 1 {
                 print("Boom")
-                let earliestNextDate = self.videoKeysRemaining!.last!
-                self.videoKeysRemaining = self.videoKeysRemaining?.dropLast()
-                let firstVideo = videos!.videoDictionary[earliestNextDate]!
 
+                currVideoIndex += 1
+                let keys = self.videos?.videoDictionary.keys.sorted()
+                let nextKey = keys?[currVideoIndex]
+                let nextVideo = self.videos?.videoDictionary[nextKey!]!
                 self.progressDict = [AVPlayer: Double]()
 
-                setVideoPlayers(to: firstVideo, playAutomatically: true)
+                setVideoPlayers(to: nextVideo!, playAutomatically: true)
+
             } else {
-                //TODO: here's where we should tear down the polling timers.
+                // tear down polling timers
+                tearDownPollingTimers()
+                let shouldDeleteSeenVideos = askToDeleteSeenVideos()
+                if shouldDeleteSeenVideos {
+                    print("Deleting videos now")
+                }
             }
 
         }
@@ -128,9 +161,9 @@ class ViewController: NSViewController {
         let rightVideo = video.first(where: { $0.cameraType == .right })
 
         // remove any previous time observers if we had 'em
-        leftAVPlayer?.removeTimeObserver(leftTimeObserver as Any)
-        centerAVPlayer?.removeTimeObserver(centerTimeObserver as Any)
-        rightAVPlayer?.removeTimeObserver(rightTimeObserver as Any)
+        tearDownPollingTimers()
+
+        updateVideoWindowTitle()
 
         // Load the videos into AVPlayers
         leftAVPlayer = AVPlayer(url: leftVideo?.fileURL ?? URL(fileURLWithPath: ""))
@@ -147,9 +180,10 @@ class ViewController: NSViewController {
         leftTimeObserver = timeObserver(for: leftAVPlayer!)
         centerTimeObserver = timeObserver(for: centerAVPlayer!)
         rightTimeObserver = timeObserver(for: rightAVPlayer!)
+        timeObservers = [leftTimeObserver!, centerTimeObserver!, rightTimeObserver!]
 
         guard playAutomatically == true else { return }
-        avPlayers?.forEach({ [weak self] (avPlayer: AVPlayer) in
+        avPlayers.forEach({ [weak self] (avPlayer: AVPlayer) in
             avPlayer.play()
             avPlayer.rate = self?.playbackRate ?? 0
         })
@@ -163,9 +197,9 @@ extension ViewController {
 
     @IBAction func playButtonWasTapped(_ sender: NSButton) {
         if !isPlaying {
-            avPlayers?.forEach({ $0.play() })
+            avPlayers.forEach({ $0.play() })
         } else {
-            avPlayers?.forEach({ $0.pause() })
+            avPlayers.forEach({ $0.pause() })
         }
         isPlaying = !isPlaying
     }
