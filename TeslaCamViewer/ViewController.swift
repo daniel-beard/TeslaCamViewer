@@ -65,16 +65,32 @@ class ViewController: NSViewController {
         centerPlayerView.controlsStyle = .none
         rightPlayerView.controlsStyle = .none
 
-        self.videos = DirectoryCrawler()
+        // Notifications
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didOpenVideoFolder(notification:)),
+                                               name: didOpenVideoNotification,
+                                               object: nil)
 
-        //TODO: No crash operator
-        let firstVideo = videos!.videoDictionary[videos!.videoDictionary.keys.sorted().first!]!
-        setVideoPlayers(to: firstVideo, playAutomatically: false)
+        // Setup video players
+        if let videos = self.videos,
+            let date = videos.videoDictionary.keys.sorted().first,
+            let firstVideo = videos.videoDictionary[date] {
+                setVideoPlayers(to: firstVideo, playAutomatically: false)
+        }
     }
 
     override func viewWillAppear() {
         super.viewWillAppear()
         updateVideoWindowTitle()
+    }
+
+    @objc func didOpenVideoFolder(notification: Notification) {
+        self.videos = notification.object as? DirectoryCrawler
+        if let videos = self.videos,
+            let date = videos.videoDictionary.keys.sorted().first,
+            let firstVideo = videos.videoDictionary[date] {
+            setVideoPlayers(to: firstVideo, playAutomatically: false)
+        }
     }
 
     func updateVideoWindowTitle() {
@@ -99,7 +115,9 @@ class ViewController: NSViewController {
                     self?.progressDict[player] = 0.0
                 }
                 self?.refreshProgressBar()
-                self?.pollCheckForEndOfVideo()
+                DispatchQueue.main.async {
+                    self?.pollCheckForEndOfVideo()
+                }
         }
         return timeObserverToken
     }
@@ -134,7 +152,6 @@ class ViewController: NSViewController {
             // Play next video, if we have one
             if currVideoIndex < (videos?.videoDictionary.keys.count ?? 0) - 1 {
                 print("Boom")
-
                 currVideoIndex += 1
                 let keys = self.videos?.videoDictionary.keys.sorted()
                 let nextKey = keys?[currVideoIndex]

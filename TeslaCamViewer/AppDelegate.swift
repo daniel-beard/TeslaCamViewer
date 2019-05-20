@@ -11,8 +11,6 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
-
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
     }
@@ -21,6 +19,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
 
+    func application(_ application: NSApplication, open urls: [URL]) {
+        openFolder(folder: urls.first!)
+    }
 
+    @IBAction func openDocument(_ sender: Any?) {
+        let openPanel = NSOpenPanel()
+        openPanel.allowsMultipleSelection = false
+        openPanel.canChooseDirectories = true
+        openPanel.canCreateDirectories = false
+        openPanel.canChooseFiles = false
+        openPanel.begin { (result) -> Void in
+            if result == NSApplication.ModalResponse.OK {
+                guard let openedURL = openPanel.url else { return }
+                self.openFolder(folder: openedURL)
+            }
+        }
+    }
+
+    func openFolder(folder: URL) {
+        let directoryCrawler = DirectoryCrawler(fileURL: folder)
+        if directoryCrawler.hasVideos {
+            // Notify our controller.
+            NotificationCenter.default.post(name: didOpenVideoNotification,
+                                            object: directoryCrawler)
+            // Mark as recently opened
+            NSDocumentController.shared.noteNewRecentDocumentURL(folder)
+        } else {
+            let _ = dialogOK(messageText: "Could not find any tesla cam videos in selected folder",
+                             infoText: "Try opening a different folder")
+        }
+    }
 }
 

@@ -14,6 +14,7 @@
 		2482D911227F657100A20F1D /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2482D90F227F657100A20F1D /* AVKit.framework */; };
 		2482D912227F657100A20F1D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2482D910227F657100A20F1D /* AVFoundation.framework */; };
 		2482D914227F65D000A20F1D /* DirectoryCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D913227F65D000A20F1D /* DirectoryCrawler.swift */; };
+		24CC880C229248EA00B5BF9C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24CC880B229248EA00B5BF9C /* Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		2482D90F227F657100A20F1D /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		2482D910227F657100A20F1D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2482D913227F65D000A20F1D /* DirectoryCrawler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryCrawler.swift; sourceTree = "<group>"; };
+		24CC880B229248EA00B5BF9C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,11 +66,12 @@
 			children = (
 				2482D8FE227F627C00A20F1D /* AppDelegate.swift */,
 				2482D900227F627C00A20F1D /* ViewController.swift */,
+				2482D913227F65D000A20F1D /* DirectoryCrawler.swift */,
 				2482D902227F627E00A20F1D /* Assets.xcassets */,
 				2482D904227F627E00A20F1D /* Main.storyboard */,
 				2482D907227F627E00A20F1D /* Info.plist */,
 				2482D908227F627E00A20F1D /* TeslaCamViewer.entitlements */,
-				2482D913227F65D000A20F1D /* DirectoryCrawler.swift */,
+				24CC880B229248EA00B5BF9C /* Utils.swift */,
 			);
 			path = TeslaCamViewer;
 			sourceTree = "<group>";
@@ -160,6 +163,7 @@
 				2482D901227F627C00A20F1D /* ViewController.swift in Sources */,
 				2482D8FF227F627C00A20F1D /* AppDelegate.swift in Sources */,
 				2482D914227F65D000A20F1D /* DirectoryCrawler.swift in Sources */,
+				24CC880C229248EA00B5BF9C /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

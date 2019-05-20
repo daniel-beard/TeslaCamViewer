@@ -66,9 +66,10 @@ class DirectoryCrawler {
 
     typealias DictionaryType = [Date : [TeslaCamVideo]]
     var videoDictionary = [Date: [TeslaCamVideo]]()
+    var hasVideos: Bool { return !videoDictionary.isEmpty }
 
-    init() {
-        let teslaCamFiles = findFiles(atPath: "/Users/dbeard/dashcam/", withExtension: "mp4")
+    init(fileURL: URL) {
+        let teslaCamFiles = findFiles(atPath: fileURL.path, withExtension:"mp4")
 
         // sort by date
         let sortedCamFiles = teslaCamFiles.sorted(by: { $0.creationDate < $1.creationDate })
