@@ -15,47 +15,45 @@ class ViewController: NSViewController {
     @IBOutlet weak var leftPlayerView: AVPlayerView!
     @IBOutlet weak var centerPlayerView: AVPlayerView!
     @IBOutlet weak var rightPlayerView: AVPlayerView!
+    var avPlayerViews = [AVPlayerView]()
 
     var leftAVPlayer: AVPlayer?
     var centerAVPlayer: AVPlayer?
     var rightAVPlayer: AVPlayer?
     var avPlayers = [AVPlayer]()
 
-    var leftTimeObserver: Any?
-    var centerTimeObserver: Any?
-    var rightTimeObserver: Any?
-    var timeObservers = [Any]()
-
-    var progressDict = [AVPlayer: Double]()
-    var leftProgress: CMTime?
-    var centerProgress: CMTime?
-    var rightProgress: CMTime?
+    var timeObserver: Any?
+    var progress: Double = 0.0
 
     var videos: DirectoryCrawler?
     var currVideoIndex: Int = 0
 
     //MARK: Reactive properties
-    var isPlaying: Bool = false {
-        didSet {
-            self.playButton.title = isPlaying ? "⏸" : "▶️"
-        }
+
+    var isPlaying: Bool {
+        return firstNonNilAVPlayer()?.rate ?? 0 != 0
     }
+
     var playbackRate: Float = 1.0 {
         didSet {
-            avPlayers.forEach({ $0.rate = playbackRate })
+            if isPlaying {
+                avPlayers.forEach({
+                    $0.rate = playbackRate
+                })
+            }
         }
     }
+
     override var title: String? {
         didSet {
             self.view.window?.title = title ?? ""
         }
     }
 
-
     //MARK: UI
     @IBOutlet weak var playButton: NSButton!
     @IBOutlet weak var speedSegmentControl: NSSegmentedControl!
-    @IBOutlet weak var progressBar: NSProgressIndicator!
+    @IBOutlet weak var progressSlider: NSSlider!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +62,10 @@ class ViewController: NSViewController {
         leftPlayerView.controlsStyle = .none
         centerPlayerView.controlsStyle = .none
         rightPlayerView.controlsStyle = .none
+
+        // setup slider action
+        progressSlider.target = self
+        progressSlider.action = #selector(sliderDidMove(slider:))
 
         // Notifications
         NotificationCenter.default.addObserver(self,
@@ -97,40 +99,55 @@ class ViewController: NSViewController {
         self.title = "Video \(currVideoIndex + 1)/\((videos?.videoDictionary.keys.count ?? 0))"
     }
 
+    func firstNonNilAVPlayer() -> AVPlayer? {
+        return avPlayers.first(where: { $0.currentItem != nil })
+    }
+
     // Adds a time observer for updating the progress bar
     func timeObserver(for player: AVPlayer) -> Any {
         // Invoke callback every half second
         let interval = CMTime(seconds: 0.5,
-                              preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        // Queue on which to invoke the callback
-        let mainQueue = DispatchQueue.main
+                              preferredTimescale: 9000)
         // Add time observer
         let timeObserverToken =
-            player.addPeriodicTimeObserver(forInterval: interval, queue: mainQueue) {
+            player.addPeriodicTimeObserver(forInterval: interval, queue: nil) {
                 [weak self] time in
 
-                if let duration = player.currentItem?.duration {
-                    self?.progressDict[player] = player.currentTime().seconds / duration.seconds * 100
-                } else {
-                    self?.progressDict[player] = 0.0
+                guard let self = self else { return }
+
+                guard let duration = player.currentItem?.duration else {
+                    self.progress = 0.0
+                    return
                 }
-                self?.refreshProgressBar()
-                DispatchQueue.main.async {
-                    self?.pollCheckForEndOfVideo()
-                }
+                self.progress = player.currentTime().seconds / duration.seconds * 100
+
+                self.refreshProgressBar()
+                self.pollCheckForEndOfVideo()
         }
         return timeObserverToken
     }
 
-    func tearDownPollingTimers() {
-        for (player, observer) in zip(avPlayers, timeObservers) {
-            player.removeTimeObserver(observer)
+    func tearDownTimersAndObservers() {
+
+        if let timeObserver = timeObserver {
+            firstNonNilAVPlayer()?.removeTimeObserver(timeObserver)
+            self.timeObserver = nil
         }
+
+        firstNonNilAVPlayer()?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.status))
+        firstNonNilAVPlayer()?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.rate))
+
+        avPlayers = []
+        leftAVPlayer = nil
+        centerAVPlayer = nil
+        rightAVPlayer = nil
+        leftPlayerView.player = nil
+        centerPlayerView.player = nil
+        rightPlayerView.player = nil
     }
 
     func refreshProgressBar() {
-        // Take the largest of all, since some videos may not load in triplets.
-        self.progressBar.doubleValue = self.progressDict.values.max() ?? 0
+        self.progressSlider.doubleValue = self.progress
     }
 
     func askToDeleteSeenVideos() -> Bool {
@@ -143,32 +160,30 @@ class ViewController: NSViewController {
         return alert.runModal() == .alertFirstButtonReturn
     }
 
-    // Calculates if any of the three videos have ended, and if so,
+    // Calculates if the sentinel video has ended.
     // move on to the next video in our list, if we've got one
     func pollCheckForEndOfVideo() {
-        let currentProgress = self.progressDict.values.max() ?? 0
+        let currentProgress = self.progress
         if currentProgress >= 100 {
 
             // Play next video, if we have one
             if currVideoIndex < (videos?.videoDictionary.keys.count ?? 0) - 1 {
                 print("Boom")
+
                 currVideoIndex += 1
                 let keys = self.videos?.videoDictionary.keys.sorted()
                 let nextKey = keys?[currVideoIndex]
                 let nextVideo = self.videos?.videoDictionary[nextKey!]!
-                self.progressDict = [AVPlayer: Double]()
-
+                progress = 0
                 setVideoPlayers(to: nextVideo!, playAutomatically: true)
-
             } else {
                 // tear down polling timers
-                tearDownPollingTimers()
+                tearDownTimersAndObservers()
                 let shouldDeleteSeenVideos = askToDeleteSeenVideos()
                 if shouldDeleteSeenVideos {
                     print("Deleting videos now")
                 }
             }
-
         }
     }
 
@@ -178,7 +193,7 @@ class ViewController: NSViewController {
         let rightVideo = video.first(where: { $0.cameraType == .right })
 
         // remove any previous time observers if we had 'em
-        tearDownPollingTimers()
+        tearDownTimersAndObservers()
 
         updateVideoWindowTitle()
 
@@ -192,33 +207,97 @@ class ViewController: NSViewController {
         self.centerPlayerView.player = centerAVPlayer
         self.rightPlayerView.player = rightAVPlayer
         avPlayers = [leftAVPlayer!, centerAVPlayer!, rightAVPlayer!]
+        avPlayerViews = [leftPlayerView!, centerPlayerView!, rightPlayerView!]
 
-        // setup new time observers
-        leftTimeObserver = timeObserver(for: leftAVPlayer!)
-        centerTimeObserver = timeObserver(for: centerAVPlayer!)
-        rightTimeObserver = timeObserver(for: rightAVPlayer!)
-        timeObservers = [leftTimeObserver!, centerTimeObserver!, rightTimeObserver!]
+        // Setup observers
+        timeObserver = timeObserver(for: firstNonNilAVPlayer()!)
+        firstNonNilAVPlayer()?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.initial, .new], context: nil)
+        firstNonNilAVPlayer()?.addObserver(self, forKeyPath: #keyPath(AVPlayer.rate), options: [.initial, .new], context: nil)
 
-        guard playAutomatically == true else { return }
-        avPlayers.forEach({ [weak self] (avPlayer: AVPlayer) in
-            avPlayer.play()
-            avPlayer.rate = self?.playbackRate ?? 0
-        })
+        DispatchQueue.main.async {
+            if playAutomatically { self.play() }
+        }
     }
 
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        DispatchQueue.main.async {
+            guard let keyPath = keyPath else { return }
+            switch keyPath {
+            case #keyPath(AVPlayer.status):
+                self.playerStatusChanged(player: object as? AVPlayer)
+            case #keyPath(AVPlayer.rate):
+                self.updatePlayingState(player: object as? AVPlayer)
+            default:
+                super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            }
+        }
+    }
+}
+
+// MARK: Observers
+
+extension ViewController {
+    func playerStatusChanged(player: AVPlayer?) {
+        guard let player = player else { return }
+        switch player.status {
+        case .readyToPlay:
+            if isPlaying {
+                player.rate = self.playbackRate
+            }
+        default: break
+        }
+    }
+
+    func updatePlayingState(player: AVPlayer?) {
+        guard let player = player else { return }
+        self.playButton.title = !player.rate.isZero ? "\u{f04c}" : "\u{f04b}"
+
+        // Debug only
+        print("Player state did change to: \(player.rate.isZero ? "paused" : "playing") - \(player)")
+
+        // Sync other players
+        avPlayers.forEach {
+            guard $0 != player else { return }
+            $0.rate = player.rate
+        }
+    }
+}
+
+//MARK: AVPlayer Functions
+
+extension ViewController {
+
+    func play() {
+        firstNonNilAVPlayer()?.play()
+        firstNonNilAVPlayer()?.rate = playbackRate
+    }
+
+    func pause() {
+        firstNonNilAVPlayer()?.pause()
+    }
+
+    func seek(toPercentage percentage: Double) {
+        let duration = firstNonNilAVPlayer()?.currentItem?.duration.seconds ?? 0
+        let seekTime = duration * (percentage / 100)
+        let cmTime = CMTimeMakeWithSeconds(Float64(Float(seekTime)), preferredTimescale: 9000)
+        avPlayers.forEach { $0.seek(to: cmTime) }
+    }
 }
 
 //MARK: IBActions
 
 extension ViewController {
 
+    @objc func sliderDidMove(slider: NSSlider) {
+        seek(toPercentage: slider.doubleValue)
+    }
+
     @IBAction func playButtonWasTapped(_ sender: NSButton) {
-        if !isPlaying {
-            avPlayers.forEach({ $0.play() })
+        if isPlaying {
+            pause()
         } else {
-            avPlayers.forEach({ $0.pause() })
+            play()
         }
-        isPlaying = !isPlaying
     }
 
     @IBAction func playbackSpeedControlTapped(_ sender: NSSegmentedControl) {
@@ -227,9 +306,9 @@ extension ViewController {
         case 1: playbackRate = 2
         case 2: playbackRate = 5
         case 3: playbackRate = 10
+        case 4: playbackRate = 20
         default: break
         }
     }
-
 }
 

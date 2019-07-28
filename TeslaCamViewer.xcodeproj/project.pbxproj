@@ -15,6 +15,7 @@
 		2482D912227F657100A20F1D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2482D910227F657100A20F1D /* AVFoundation.framework */; };
 		2482D914227F65D000A20F1D /* DirectoryCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D913227F65D000A20F1D /* DirectoryCrawler.swift */; };
 		24CC880C229248EA00B5BF9C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24CC880B229248EA00B5BF9C /* Utils.swift */; };
+		24CC880E2293975F00B5BF9C /* fa-solid-900.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24CC880D2293975F00B5BF9C /* fa-solid-900.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		2482D910227F657100A20F1D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2482D913227F65D000A20F1D /* DirectoryCrawler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryCrawler.swift; sourceTree = "<group>"; };
 		24CC880B229248EA00B5BF9C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		24CC880D2293975F00B5BF9C /* fa-solid-900.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fa-solid-900.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				2482D904227F627E00A20F1D /* Main.storyboard */,
 				2482D907227F627E00A20F1D /* Info.plist */,
 				2482D908227F627E00A20F1D /* TeslaCamViewer.entitlements */,
+				24CC880D2293975F00B5BF9C /* fa-solid-900.ttf */,
 				24CC880B229248EA00B5BF9C /* Utils.swift */,
 			);
 			path = TeslaCamViewer;
@@ -148,6 +151,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24CC880E2293975F00B5BF9C /* fa-solid-900.ttf in Resources */,
 				2482D903227F627E00A20F1D /* Assets.xcassets in Resources */,
 				2482D906227F627E00A20F1D /* Main.storyboard in Resources */,
 			);
