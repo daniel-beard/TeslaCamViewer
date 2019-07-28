@@ -225,6 +225,9 @@ class ViewController: NSViewController {
         avPlayers = [leftAVPlayer!, centerAVPlayer!, rightAVPlayer!]
         avPlayerViews = [leftPlayerView!, centerPlayerView!, rightPlayerView!]
 
+        // Set resize behavior
+        avPlayerViews.forEach { $0.videoGravity = .resizeAspectFill }
+
         // Setup observers
         timeObserver = timeObserver(for: firstNonNilAVPlayer()!)
         firstNonNilAVPlayer()?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.initial, .new], context: nil)
