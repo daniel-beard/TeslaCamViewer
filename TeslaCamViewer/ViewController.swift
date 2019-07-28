@@ -11,6 +11,8 @@ import AVKit
 
 class ViewController: NSViewController {
 
+    @IBOutlet weak var tableView: NSTableView!
+
     //MARK: Player support
     @IBOutlet weak var leftPlayerView: AVPlayerView!
     @IBOutlet weak var centerPlayerView: AVPlayerView!
@@ -24,11 +26,15 @@ class ViewController: NSViewController {
 
     var timeObserver: Any?
     var progress: Double = 0.0
-
-    var videos: DirectoryCrawler?
     var currVideoIndex: Int = 0
 
     //MARK: Reactive properties
+
+    var videos: DirectoryCrawler? {
+        didSet {
+            tableView.reloadData()
+        }
+    }
 
     var isPlaying: Bool {
         return firstNonNilAVPlayer()?.rate ?? 0 != 0
@@ -57,6 +63,13 @@ class ViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Table View setup
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.target = self
+        tableView.doubleAction = #selector(tableViewDoubleClick(_:))
+
 
         // setup player control styles
         leftPlayerView.controlsStyle = .none
@@ -174,8 +187,8 @@ class ViewController: NSViewController {
                 let keys = self.videos?.videoDictionary.keys.sorted()
                 let nextKey = keys?[currVideoIndex]
                 let nextVideo = self.videos?.videoDictionary[nextKey!]!
-                progress = 0
                 setVideoPlayers(to: nextVideo!, playAutomatically: true)
+                tableView.selectRowIndexes(IndexSet(integer: currVideoIndex), byExtendingSelection: false)
             } else {
                 // tear down polling timers
                 tearDownTimersAndObservers()
@@ -188,6 +201,9 @@ class ViewController: NSViewController {
     }
 
     func setVideoPlayers(to video: [TeslaCamVideo], playAutomatically: Bool) {
+
+        progress = 0
+
         let leftVideo = video.first(where: { $0.cameraType == .left })
         let centerVideo = video.first(where: { $0.cameraType == .front })
         let rightVideo = video.first(where: { $0.cameraType == .right })
@@ -309,6 +325,55 @@ extension ViewController {
         case 4: playbackRate = 20
         default: break
         }
+    }
+}
+
+// Mark: Table View Support
+
+extension ViewController {
+    @objc func tableViewDoubleClick(_ sender:AnyObject) {
+        guard tableView.selectedRow >= 0 else {
+                return
+        }
+        guard let videoDict = videos?.videoDictionary else { return }
+        let sortedKeys = videoDict.keys.sorted()
+        let rowIndex = sortedKeys[tableView.selectedRow]
+        currVideoIndex = tableView.selectedRow
+        guard let nextVideo = videoDict[rowIndex] else { return }
+        setVideoPlayers(to: nextVideo, playAutomatically: true)
+    }
+}
+
+extension ViewController: NSTableViewDataSource {
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return videos?.videoDictionary.keys.count ?? 0
+    }
+}
+
+extension ViewController: NSTableViewDelegate {
+
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+
+        var text: String = ""
+        var cellIdentifier: String = ""
+        guard let videoDict = videos?.videoDictionary else { return nil }
+        let sortedKeys = videoDict.keys.sorted()
+        let rowIndex = sortedKeys[row]
+
+        guard let item = videoDict[rowIndex] else {
+            return nil
+        }
+
+        if tableColumn == tableView.tableColumns[0] {
+            text = item.first?.genericFileName() ?? ""
+            cellIdentifier = "VideoCellID"
+        }
+
+        if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView {
+            cell.textField?.stringValue = text
+            return cell
+        }
+        return nil
     }
 }
 

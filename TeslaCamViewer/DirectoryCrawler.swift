@@ -16,6 +16,14 @@ enum TeslaCameraType: String {
     case front
     case left
     case right
+
+    func rawValue() -> String {
+        switch self {
+        case .front:            return "front"
+        case .right:            return "right_repeater"
+        case .left:             return "left_repeater"
+        }
+    }
 }
 
 struct TeslaCamVideo: Equatable, Hashable {
@@ -59,6 +67,13 @@ struct TeslaCamVideo: Equatable, Hashable {
             fatalError("Could not create date from dateString: \(dateString)")
         }
         self.creationDate = date
+    }
+
+    // Returns a filename that corresponds to the top level combined video
+    // E.g. Just the date components, not including the '-left_repeater', 'center' parts.
+    func genericFileName() -> String {
+        let pathComponent = fileURL.lastPathComponent
+        return pathComponent.replacingOccurrences(of: "-" + self.cameraType.rawValue(), with: "")
     }
 }
 
