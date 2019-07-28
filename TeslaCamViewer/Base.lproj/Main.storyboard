@@ -707,52 +707,39 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="TeslaCamViewer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="1498" height="610"/>
+                        <rect key="frame" x="0.0" y="0.0" width="765" height="636"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="y0s-0r-cvf">
-                                <rect key="frame" x="0.0" y="40" width="1498" height="570"/>
+                                <rect key="frame" x="0.0" y="40" width="765" height="596"/>
                                 <subviews>
-                                    <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KcH-tf-WRt">
-                                        <rect key="frame" x="0.0" y="0.0" width="1498" height="550"/>
-                                        <subviews>
-                                            <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="n04-2u-Otx" userLabel="LeftPlayerView">
-                                                <rect key="frame" x="0.0" y="50" width="494" height="450"/>
-                                            </avPlayerView>
-                                            <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="kxP-4Q-8tB" userLabel="CenterPlayerView">
-                                                <rect key="frame" x="502" y="50" width="494" height="450"/>
-                                            </avPlayerView>
-                                            <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="ApR-pf-1xc" userLabel="RightPlayerView">
-                                                <rect key="frame" x="1004" y="50" width="494" height="450"/>
-                                            </avPlayerView>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstItem="kxP-4Q-8tB" firstAttribute="leading" secondItem="n04-2u-Otx" secondAttribute="trailing" constant="8" id="6PX-0c-PAf"/>
-                                            <constraint firstItem="n04-2u-Otx" firstAttribute="width" secondItem="kxP-4Q-8tB" secondAttribute="width" id="A4w-9b-aFf"/>
-                                            <constraint firstItem="kxP-4Q-8tB" firstAttribute="width" secondItem="ApR-pf-1xc" secondAttribute="width" id="Iqs-Sj-psf"/>
-                                            <constraint firstItem="ApR-pf-1xc" firstAttribute="leading" secondItem="kxP-4Q-8tB" secondAttribute="trailing" constant="8" id="peQ-YR-6zp"/>
-                                        </constraints>
-                                        <visibilityPriorities>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                        </visibilityPriorities>
-                                        <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                        </customSpacing>
-                                    </stackView>
+                                    <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="n04-2u-Otx" userLabel="LeftPlayerView">
+                                        <rect key="frame" x="0.0" y="0.0" width="383" height="298"/>
+                                    </avPlayerView>
+                                    <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="ApR-pf-1xc" userLabel="RightPlayerView">
+                                        <rect key="frame" x="383" y="0.0" width="382" height="298"/>
+                                    </avPlayerView>
+                                    <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="kxP-4Q-8tB" userLabel="CenterPlayerView">
+                                        <rect key="frame" x="0.0" y="298" width="765" height="298"/>
+                                    </avPlayerView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="KcH-tf-WRt" secondAttribute="bottom" id="1ds-9w-O6b"/>
-                                    <constraint firstItem="KcH-tf-WRt" firstAttribute="leading" secondItem="y0s-0r-cvf" secondAttribute="leading" id="6vh-JD-IKc"/>
-                                    <constraint firstAttribute="trailing" secondItem="KcH-tf-WRt" secondAttribute="trailing" id="9H9-76-405"/>
-                                    <constraint firstItem="KcH-tf-WRt" firstAttribute="top" secondItem="y0s-0r-cvf" secondAttribute="top" constant="20" id="DPv-zl-XcQ"/>
+                                    <constraint firstItem="n04-2u-Otx" firstAttribute="top" secondItem="kxP-4Q-8tB" secondAttribute="bottom" id="1PF-ur-1fh"/>
+                                    <constraint firstItem="n04-2u-Otx" firstAttribute="height" secondItem="ApR-pf-1xc" secondAttribute="height" id="8LM-W9-Rpa"/>
+                                    <constraint firstItem="n04-2u-Otx" firstAttribute="leading" secondItem="y0s-0r-cvf" secondAttribute="leading" id="A8g-HN-uN9"/>
+                                    <constraint firstItem="kxP-4Q-8tB" firstAttribute="height" secondItem="n04-2u-Otx" secondAttribute="height" id="AXj-SW-vHm"/>
+                                    <constraint firstItem="n04-2u-Otx" firstAttribute="width" secondItem="ApR-pf-1xc" secondAttribute="width" id="GSq-z8-QvD"/>
+                                    <constraint firstAttribute="trailing" secondItem="ApR-pf-1xc" secondAttribute="trailing" id="HvG-8E-gaf"/>
+                                    <constraint firstItem="ApR-pf-1xc" firstAttribute="leading" secondItem="n04-2u-Otx" secondAttribute="trailing" id="fuP-sQ-Uwf"/>
+                                    <constraint firstItem="kxP-4Q-8tB" firstAttribute="top" secondItem="y0s-0r-cvf" secondAttribute="top" id="jVj-Q9-cXR"/>
+                                    <constraint firstAttribute="bottom" secondItem="ApR-pf-1xc" secondAttribute="bottom" id="pyr-7P-XM7"/>
+                                    <constraint firstAttribute="bottom" secondItem="n04-2u-Otx" secondAttribute="bottom" id="sEM-kd-sjd"/>
+                                    <constraint firstAttribute="trailing" secondItem="kxP-4Q-8tB" secondAttribute="trailing" id="y5p-YI-eT9"/>
+                                    <constraint firstItem="kxP-4Q-8tB" firstAttribute="leading" secondItem="y0s-0r-cvf" secondAttribute="leading" id="yJZ-Zz-TkR"/>
                                 </constraints>
                             </customView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cV9-XG-drs" userLabel="PlayButton">
-                                <rect key="frame" x="712" y="13" width="75" height="32"/>
+                                <rect key="frame" x="345" y="4" width="75" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="63" id="o7F-3h-ahD"/>
                                 </constraints>
@@ -765,7 +752,7 @@
                                 </connections>
                             </button>
                             <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ee4-dY-2X4" userLabel="SpeedControl">
-                                <rect key="frame" x="801" y="19" width="198" height="23"/>
+                                <rect key="frame" x="559" y="10" width="198" height="23"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="4oR-Fz-sCh">
                                     <font key="font" metaFont="system"/>
                                     <segments>
@@ -780,22 +767,24 @@
                                     <action selector="playbackSpeedControlTapped:" target="XfG-lQ-9wD" id="0M7-z4-AGJ"/>
                                 </connections>
                             </segmentedControl>
-                            <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nDk-0I-Vtm">
-                                <rect key="frame" x="18" y="9" width="404" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nDk-0I-Vtm">
+                                <rect key="frame" x="18" y="10" width="295" height="24"/>
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="100" tickMarkPosition="below" numberOfTickMarks="20" sliderType="linear" id="o5S-64-UaQ"/>
                             </slider>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="y0s-0r-cvf" secondAttribute="bottom" constant="40" id="ADg-Hh-Soo"/>
-                            <constraint firstAttribute="bottom" secondItem="Ee4-dY-2X4" secondAttribute="bottom" constant="20" id="BTD-Ml-ozP"/>
                             <constraint firstItem="y0s-0r-cvf" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="CYF-ma-I5Q"/>
                             <constraint firstItem="cV9-XG-drs" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="DRz-qD-Yeu"/>
-                            <constraint firstItem="Ee4-dY-2X4" firstAttribute="leading" secondItem="cV9-XG-drs" secondAttribute="trailing" constant="20" id="FcA-Ds-f1w"/>
+                            <constraint firstItem="Ee4-dY-2X4" firstAttribute="leading" secondItem="cV9-XG-drs" secondAttribute="trailing" constant="145" id="FcA-Ds-f1w"/>
+                            <constraint firstItem="nDk-0I-Vtm" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="TWD-Ln-ZWg"/>
+                            <constraint firstItem="cV9-XG-drs" firstAttribute="leading" secondItem="nDk-0I-Vtm" secondAttribute="trailing" constant="40" id="V7p-1r-lLI"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ee4-dY-2X4" secondAttribute="trailing" constant="8" id="VWs-H4-1tg"/>
                             <constraint firstAttribute="trailing" secondItem="y0s-0r-cvf" secondAttribute="trailing" id="arq-rv-pPA"/>
-                            <constraint firstAttribute="bottom" secondItem="cV9-XG-drs" secondAttribute="bottom" constant="20" symbolic="YES" id="dWY-zH-Q2q"/>
+                            <constraint firstAttribute="bottom" secondItem="cV9-XG-drs" secondAttribute="bottom" constant="11" id="dWY-zH-Q2q"/>
                             <constraint firstItem="y0s-0r-cvf" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="kDp-Sg-e0N"/>
                             <constraint firstItem="cV9-XG-drs" firstAttribute="bottom" secondItem="Ee4-dY-2X4" secondAttribute="bottom" id="qHm-mS-8Vr"/>
+                            <constraint firstItem="nDk-0I-Vtm" firstAttribute="centerY" secondItem="cV9-XG-drs" secondAttribute="centerY" id="tQr-Ia-eIX"/>
                         </constraints>
                     </view>
                     <connections>
