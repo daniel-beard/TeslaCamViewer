@@ -80,12 +80,12 @@
 				2482D8FE227F627C00A20F1D /* AppDelegate.swift */,
 				2482D900227F627C00A20F1D /* ViewController.swift */,
 				2482D913227F65D000A20F1D /* DirectoryCrawler.swift */,
+				24CC880B229248EA00B5BF9C /* Utils.swift */,
 				2482D902227F627E00A20F1D /* Assets.xcassets */,
 				2482D904227F627E00A20F1D /* Main.storyboard */,
 				2482D907227F627E00A20F1D /* Info.plist */,
 				2482D908227F627E00A20F1D /* TeslaCamViewer.entitlements */,
 				24CC880D2293975F00B5BF9C /* fa-solid-900.ttf */,
-				24CC880B229248EA00B5BF9C /* Utils.swift */,
 			);
 			path = TeslaCamViewer;
 			sourceTree = "<group>";

@@ -117,11 +117,22 @@ class ViewController: NSViewController {
     }
 
     func updateVideoWindowTitle() {
-        self.title = "Video \(currVideoIndex + 1)/\((videos?.videoDictionary.keys.count ?? 0))"
+        guard let videoCount = videos?.videoDictionary.keys.count else {
+            self.title = "No videos loaded"
+            return
+        }
+        self.title = "Video \(currVideoIndex + 1)/\((videoCount))"
     }
 
     func firstNonNilAVPlayer() -> AVPlayer? {
-        return avPlayers.first(where: { $0.currentItem != nil })
+        var first = avPlayers.first(where: {
+            $0.currentItem != nil &&
+            ($0.currentItem?.duration.seconds ?? 0) > 1.0
+        })
+        if first == nil {
+            first = avPlayers.first(where: { $0.currentItem != nil })
+        }
+        return first
     }
 
     // Adds a time observer for updating the progress bar
@@ -327,6 +338,7 @@ extension ViewController {
         self.isPreloadingFlag = false
         self.currVideoIndex = 0
         self.progressSlider.doubleValue = 0
+        self.updateVideoWindowTitle()
     }
 }
 
