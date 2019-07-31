@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		24796FD922EE7C1000713DF3 /* IndeterminateProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24796FD822EE7C1000713DF3 /* IndeterminateProgressView.swift */; };
 		2482D8FF227F627C00A20F1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D8FE227F627C00A20F1D /* AppDelegate.swift */; };
 		2482D901227F627C00A20F1D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D900227F627C00A20F1D /* ViewController.swift */; };
 		2482D903227F627E00A20F1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2482D902227F627E00A20F1D /* Assets.xcassets */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		24796FD822EE7C1000713DF3 /* IndeterminateProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndeterminateProgressView.swift; sourceTree = "<group>"; };
 		2482D8FB227F627C00A20F1D /* TeslaCamViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TeslaCamViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2482D8FE227F627C00A20F1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2482D900227F627C00A20F1D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -46,6 +48,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		24796FD322EE7A7A00713DF3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				24796FD822EE7C1000713DF3 /* IndeterminateProgressView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		2482D8F2227F627C00A20F1D = {
 			isa = PBXGroup;
 			children = (
@@ -66,6 +76,7 @@
 		2482D8FD227F627C00A20F1D /* TeslaCamViewer */ = {
 			isa = PBXGroup;
 			children = (
+				24796FD322EE7A7A00713DF3 /* Views */,
 				2482D8FE227F627C00A20F1D /* AppDelegate.swift */,
 				2482D900227F627C00A20F1D /* ViewController.swift */,
 				2482D913227F65D000A20F1D /* DirectoryCrawler.swift */,
@@ -164,6 +175,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24796FD922EE7C1000713DF3 /* IndeterminateProgressView.swift in Sources */,
 				2482D901227F627C00A20F1D /* ViewController.swift in Sources */,
 				2482D8FF227F627C00A20F1D /* AppDelegate.swift in Sources */,
 				2482D914227F65D000A20F1D /* DirectoryCrawler.swift in Sources */,

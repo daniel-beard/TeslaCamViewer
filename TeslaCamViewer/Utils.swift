@@ -30,4 +30,17 @@ func dialogOK(messageText: String, infoText: String) -> Bool {
     return alert.runModal() == .alertFirstButtonReturn
 }
 
+// Callback is invoked with true when the user opts to remove videos.
+func dialogRemoveVideos(countOfItems: Int, window: NSWindow, result: @escaping (Bool) -> Void) {
+    let a = NSAlert()
+    a.messageText = "Delete all loaded videos?"
+    a.informativeText = "Are you sure you would like to delete the currently loaded videos?"
+    a.addButton(withTitle: "Delete \(countOfItems) Videos")
+    a.addButton(withTitle: "Cancel")
+    a.alertStyle = .warning
+    a.beginSheetModal(for: window) { (response) in
+        result(response == NSApplication.ModalResponse.alertFirstButtonReturn)
+    }
+}
+
 

@@ -24,6 +24,14 @@ class ViewController: NSViewController {
     var rightAVPlayer: AVPlayer?
     var avPlayers = [AVPlayer]()
 
+    //TODO: All this proeloading feels like it should be extracted out into a helper.
+    // Find the commit that introduced this message.
+    var isPreloadingFlag: Bool = false
+    var preloadLeftAVPlayer: AVPlayer?
+    var preloadCenterAVPlayer: AVPlayer?
+    var preloadRightAVPlayer: AVPlayer?
+    var preloadAVPlayers = [AVPlayer]() //not sure if I'll need this.
+
     var timeObserver: Any?
     var progress: Double = 0.0
     var currVideoIndex: Int = 0
@@ -177,6 +185,24 @@ class ViewController: NSViewController {
     // move on to the next video in our list, if we've got one
     func pollCheckForEndOfVideo() {
         let currentProgress = self.progress
+
+        // Try loading from cache here in the background, so we can try to load faster.
+        if currentProgress >= 30 && !isPreloadingFlag {
+
+            // Figure out next viedoes, if they exist, then set the preload avplayers.
+            // next video, if we have one
+            if currVideoIndex < (videos?.videoDictionary.keys.count ?? 0) - 1 {
+                isPreloadingFlag = true
+                let tmpCurrVideoIndex = currVideoIndex + 1
+                let keys = self.videos?.videoDictionary.keys.sorted()
+                let nextKey = keys?[tmpCurrVideoIndex]
+                let nextVideo = self.videos?.videoDictionary[nextKey!]!
+
+                self.preloadAVPlayers = preloadPlayers(for: nextVideo!)
+            }
+
+        }
+
         if currentProgress >= 100 {
 
             // Play next video, if we have one
@@ -194,29 +220,60 @@ class ViewController: NSViewController {
                 tearDownTimersAndObservers()
                 let shouldDeleteSeenVideos = askToDeleteSeenVideos()
                 if shouldDeleteSeenVideos {
+                    //TODO: Implement actual delete in backgraound thread in DirectoryCrawler,
+                    // with callback. Then call it from here, dipshit.
                     print("Deleting videos now")
                 }
             }
         }
     }
 
-    func setVideoPlayers(to video: [TeslaCamVideo], playAutomatically: Bool) {
-
-        progress = 0
+    func preloadPlayers(for video: [TeslaCamVideo]) -> [AVPlayer] {
 
         let leftVideo = video.first(where: { $0.cameraType == .left })
         let centerVideo = video.first(where: { $0.cameraType == .front })
         let rightVideo = video.first(where: { $0.cameraType == .right })
+
+        // Load the videos into AVPlayers
+        preloadLeftAVPlayer = AVPlayer(url: leftVideo?.fileURL ?? URL(fileURLWithPath: ""))
+        preloadCenterAVPlayer = AVPlayer(url: centerVideo?.fileURL ?? URL(fileURLWithPath: ""))
+        preloadRightAVPlayer = AVPlayer(url: rightVideo?.fileURL ?? URL(fileURLWithPath: ""))
+
+        return [preloadLeftAVPlayer!, preloadCenterAVPlayer!, preloadRightAVPlayer!]
+    }
+
+    func setVideoPlayers(to video: [TeslaCamVideo], playAutomatically: Bool) {
+
+        progress = 0
 
         // remove any previous time observers if we had 'em
         tearDownTimersAndObservers()
 
         updateVideoWindowTitle()
 
-        // Load the videos into AVPlayers
-        leftAVPlayer = AVPlayer(url: leftVideo?.fileURL ?? URL(fileURLWithPath: ""))
-        centerAVPlayer = AVPlayer(url: centerVideo?.fileURL ?? URL(fileURLWithPath: ""))
-        rightAVPlayer = AVPlayer(url: rightVideo?.fileURL ?? URL(fileURLWithPath: ""))
+        if preloadAVPlayers.count > 0 {
+            leftAVPlayer = preloadLeftAVPlayer
+            centerAVPlayer = preloadCenterAVPlayer
+            rightAVPlayer = preloadRightAVPlayer
+
+            preloadLeftAVPlayer = nil
+            preloadCenterAVPlayer = nil
+            preloadRightAVPlayer = nil
+            preloadAVPlayers.removeAll()
+
+            isPreloadingFlag = false
+        } else {
+
+            let leftVideo = video.first(where: { $0.cameraType == .left })
+            let centerVideo = video.first(where: { $0.cameraType == .front })
+            let rightVideo = video.first(where: { $0.cameraType == .right })
+
+            // Load the videos into AVPlayers
+            leftAVPlayer = AVPlayer(url: leftVideo?.fileURL ?? URL(fileURLWithPath: ""))
+            centerAVPlayer = AVPlayer(url: centerVideo?.fileURL ?? URL(fileURLWithPath: ""))
+            rightAVPlayer = AVPlayer(url: rightVideo?.fileURL ?? URL(fileURLWithPath: ""))
+
+        }
 
         // Load into player views
         self.leftPlayerView.player = leftAVPlayer
@@ -250,6 +307,31 @@ class ViewController: NSViewController {
                 super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             }
         }
+    }
+}
+
+// MARK: Utils
+
+extension ViewController {
+    func resetUIToInitialState() {
+        tearDownTimersAndObservers()
+        self.progress = 0
+        self.videos = nil
+        self.avPlayers.removeAll()
+        self.leftAVPlayer = nil
+        self.centerAVPlayer = nil
+        self.rightAVPlayer = nil
+        self.avPlayerViews.removeAll()
+        self.leftPlayerView.player = nil
+        self.centerPlayerView.player = nil
+        self.rightPlayerView.player = nil
+        self.preloadAVPlayers.removeAll()
+        self.preloadLeftAVPlayer = nil
+        self.preloadCenterAVPlayer = nil
+        self.preloadRightAVPlayer = nil
+        self.isPreloadingFlag = false
+        self.currVideoIndex = 0
+        self.progressSlider.doubleValue = 0
     }
 }
 
@@ -327,6 +409,26 @@ extension ViewController {
         case 3: playbackRate = 10
         case 4: playbackRate = 20
         default: break
+        }
+    }
+
+    @IBAction func removeAllLoadedVideos(_ sender: Any?) {
+
+        guard let videos = videos, videos.videoDictionary.keys.count > 0 else {
+            let _ = dialogOK(
+                messageText: "No videos currently loaded.",
+                infoText: "Can not remove videos"
+            )
+            return
+        }
+
+        dialogRemoveVideos(countOfItems: videos.allAngleVideoCount(), window: self.view.window!) { [weak self] (shouldRemoveVideos) in
+            videos.removeAllLoadedVideos {
+                DispatchQueue.main.async {
+                    self?.resetUIToInitialState()
+                    print("Done removing videos!")
+                }
+            }
         }
     }
 }

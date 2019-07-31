@@ -45,11 +45,15 @@ struct TeslaCamVideo: Equatable, Hashable {
             case "front":           self.cameraType = .front
             case "right_repeater":  self.cameraType = .right
             case "left_repeater":   self.cameraType = .left
-            default: fatalError("Unknown camera type: \(String(describing: repeaterType))"); return nil
+            //TODO: Ignore, but log these in future.
+            default: return nil//fatalError("Unknown camera type: \(String(describing: repeaterType)) For filename: \(fileURL)"); return nil
         }
         components = components.dropLast()
         components = components.map { $0.split(separator: "_" )}.flatMap({$0})
 
+        //TODO: This isn't correct, there appears to be other numbers of components we
+        // need to check here.
+        components = Array(components.prefix(5))
         guard components.count == 5 else {
             fatalError("Unknown date format, expected 5 components, got \(components.count)")
         }
@@ -76,6 +80,8 @@ struct TeslaCamVideo: Equatable, Hashable {
         return pathComponent.replacingOccurrences(of: "-" + self.cameraType.rawValue(), with: "")
     }
 }
+
+internal typealias DirectoryCrawlerCompletion = () -> Void
 
 class DirectoryCrawler {
 
@@ -118,6 +124,24 @@ class DirectoryCrawler {
             print(error)
         }
         return result
+    }
+
+    // Returns true count of all loaded videos
+    // E.g. including all angles, so 100 sentry videos might return 300 from this function
+    func allAngleVideoCount() -> Int {
+        return videoDictionary.values.flatMap({ $0 }).count
+    }
+
+    func removeAllLoadedVideos(callback: @escaping DirectoryCrawlerCompletion) {
+        DispatchQueue(label: "fileRemovalQueue").async(execute: {
+
+            let videosToRemove = self.videoDictionary.values.flatMap({ $0 }).map { $0.fileURL }
+            for file in videosToRemove {
+                //TODO: Handle errors correctly here.
+                try! FileManager.default.removeItem(at: file)
+            }
+            callback()
+        })
     }
 
 }
