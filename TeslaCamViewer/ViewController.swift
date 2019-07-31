@@ -78,7 +78,6 @@ class ViewController: NSViewController {
         tableView.target = self
         tableView.doubleAction = #selector(tableViewDoubleClick(_:))
 
-
         // setup player control styles
         leftPlayerView.controlsStyle = .none
         centerPlayerView.controlsStyle = .none

@@ -7,12 +7,20 @@
 //
 
 import Cocoa
+import Sentry
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+
+        // Crash reporting setup
+        do {
+            Client.shared = try Client(dsn: "https://1ba3a17b63e5492bb577d60ff002ccda@sentry.io/1518726")
+            try Client.shared?.startCrashHandler()
+        } catch let error {
+            print("\(error)")
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
