@@ -31,6 +31,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         openFolder(folder: urls.first!)
     }
 
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true
+    }
+
     @IBAction func openDocument(_ sender: Any?) {
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
