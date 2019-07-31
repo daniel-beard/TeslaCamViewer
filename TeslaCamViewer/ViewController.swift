@@ -218,12 +218,7 @@ class ViewController: NSViewController {
             } else {
                 // tear down polling timers
                 tearDownTimersAndObservers()
-                let shouldDeleteSeenVideos = askToDeleteSeenVideos()
-                if shouldDeleteSeenVideos {
-                    //TODO: Implement actual delete in backgraound thread in DirectoryCrawler,
-                    // with callback. Then call it from here, dipshit.
-                    print("Deleting videos now")
-                }
+                removeAllLoadedVideos(nil)
             }
         }
     }
