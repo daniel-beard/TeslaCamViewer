@@ -429,6 +429,7 @@ extension ViewController {
         }
 
         dialogRemoveVideos(countOfItems: videos.allAngleVideoCount(), window: self.view.window!) { [weak self] (shouldRemoveVideos) in
+            guard shouldRemoveVideos == true else { return }
             videos.removeAllLoadedVideos {
                 DispatchQueue.main.async {
                     self?.resetUIToInitialState()
