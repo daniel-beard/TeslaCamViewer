@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 // Walks an input directory searching for teslaCam recordings.
 // Returns an ordered list of recordings containing left, front, and right repeater video
@@ -83,11 +84,16 @@ struct TeslaCamVideo: Equatable, Hashable {
 
 internal typealias DirectoryCrawlerCompletion = () -> Void
 
-class DirectoryCrawler {
+class DataSource {
 
     typealias DictionaryType = [Date : [TeslaCamVideo]]
     var videoDictionary = [Date: [TeslaCamVideo]]()
+    var sortedKeys = [Date]()
     var hasVideos: Bool { return !videoDictionary.isEmpty }
+    var currentIndex = 0
+
+    //MARK: Private properties
+    private var videoURLsSortedByDate = [[TeslaCamVideo]]()
 
     init(fileURL: URL) {
         let teslaCamFiles = findFiles(atPath: fileURL.path, withExtension:"mp4")
@@ -95,6 +101,12 @@ class DirectoryCrawler {
         // sort by date
         let sortedCamFiles = teslaCamFiles.sorted(by: { $0.creationDate < $1.creationDate })
         self.videoDictionary = Dictionary(grouping: sortedCamFiles, by: { $0.creationDate })
+        self.sortedKeys = videoDictionary.keys.sorted()
+
+        for key in sortedKeys {
+            guard let videoTriplet = videoDictionary[key] else { continue }
+            videoURLsSortedByDate.append(videoTriplet)
+        }
     }
 
     func findFiles(atPath path: String, withExtension fileExtension:String) -> [TeslaCamVideo] {
@@ -146,7 +158,53 @@ class DirectoryCrawler {
 
 }
 
-extension DirectoryCrawler: Collection {
+// MARK: Queue Management
+let FETCH_COUNT = 1
+extension DataSource {
+
+    internal typealias VideoQueue = (leftVideos: [AVPlayerItem], centerVideos: [AVPlayerItem], rightVideos: [AVPlayerItem])
+
+    func initialVideoQueue() -> VideoQueue {
+        return videoQueue(startIndex: 0, count: FETCH_COUNT)
+    }
+
+    func nextQueueSection(fromIndex: Int) -> VideoQueue {
+        return videoQueue(startIndex: fromIndex, count: FETCH_COUNT)
+    }
+
+    func videoQueue(startIndex: Int, count: Int) -> VideoQueue {
+        var leftVideos = [AVPlayerItem]()
+        var centerVideos = [AVPlayerItem]()
+        var rightVideos = [AVPlayerItem]()
+
+        guard startIndex < self.sortedKeys.count - 1 else {
+            return (leftVideos, centerVideos, rightVideos)
+        }
+
+        let keys = Array(self.sortedKeys[startIndex..<(startIndex+count)])
+        for key in keys {
+            guard let current = videoDictionary[key] else { continue }
+            leftVideos.append(AVPlayerItem(url: current.first(where:{ $0.cameraType == .left})!.fileURL))
+            centerVideos.append(AVPlayerItem(url: current.first(where:{ $0.cameraType == .front})!.fileURL))
+            rightVideos.append(AVPlayerItem(url: current.first(where:{ $0.cameraType == .right})!.fileURL))
+        }
+        return (leftVideos, centerVideos, rightVideos)
+    }
+
+    // Need this func to get the furtherest index we have added to a queue.
+    //TODO: Should probably make this a O(1) lookup, but it's O(n) right now.
+    func indexFromAVPlayerItem(item: AVPlayerItem?) -> Int? {
+        guard let item = item else { return nil }
+        guard let asset = item.asset as? AVURLAsset else { return nil }
+        // get date from url
+        let index = videoURLsSortedByDate.firstIndex(where: { (triplet) -> Bool in
+            triplet.contains(where: { $0.fileURL == asset.url })
+        })
+        return index
+    }
+}
+
+extension DataSource: Collection {
     // Required nested types, that tell Swift what our collection contains
     typealias Index = DictionaryType.Index
     typealias Element = DictionaryType.Element

@@ -50,7 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func openFolder(folder: URL) {
-        let directoryCrawler = DirectoryCrawler(fileURL: folder)
+        let directoryCrawler = DataSource(fileURL: folder)
         if directoryCrawler.hasVideos {
             // Notify our controller.
             NotificationCenter.default.post(name: didOpenVideoNotification,

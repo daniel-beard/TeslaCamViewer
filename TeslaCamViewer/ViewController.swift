@@ -19,26 +19,18 @@ class ViewController: NSViewController {
     @IBOutlet weak var rightPlayerView: AVPlayerView!
     var avPlayerViews = [AVPlayerView]()
 
-    var leftAVPlayer: AVPlayer?
-    var centerAVPlayer: AVPlayer?
-    var rightAVPlayer: AVPlayer?
-    var avPlayers = [AVPlayer]()
-
-    //TODO: All this proeloading feels like it should be extracted out into a helper.
-    // Find the commit that introduced this message.
-    var isPreloadingFlag: Bool = false
-    var preloadLeftAVPlayer: AVPlayer?
-    var preloadCenterAVPlayer: AVPlayer?
-    var preloadRightAVPlayer: AVPlayer?
-    var preloadAVPlayers = [AVPlayer]() //not sure if I'll need this.
+    var leftAVPlayer: AVQueuePlayer?
+    var centerAVPlayer: AVQueuePlayer?
+    var rightAVPlayer: AVQueuePlayer?
+    var avPlayers = [AVQueuePlayer]()
 
     var timeObserver: Any?
     var progress: Double = 0.0
-    var currVideoIndex: Int = 0
+//    var currVideoIndex: Int = 0
 
     //MARK: Reactive properties
 
-    var videos: DirectoryCrawler? {
+    var videos: DataSource? {
         didSet {
             tableView.reloadData()
         }
@@ -107,7 +99,7 @@ class ViewController: NSViewController {
     }
 
     @objc func didOpenVideoFolder(notification: Notification) {
-        self.videos = notification.object as? DirectoryCrawler
+        self.videos = notification.object as? DataSource
         if let videos = self.videos,
             let date = videos.videoDictionary.keys.sorted().first,
             let firstVideo = videos.videoDictionary[date] {
@@ -120,10 +112,10 @@ class ViewController: NSViewController {
             self.title = "No videos loaded"
             return
         }
-        self.title = "Video \(currVideoIndex + 1)/\((videoCount))"
+        self.title = "Video \(videos?.currentIndex ?? 0 + 1)/\((videoCount))"
     }
 
-    func firstNonNilAVPlayer() -> AVPlayer? {
+    func firstNonNilAVPlayer() -> AVQueuePlayer? {
         var first = avPlayers.first(where: {
             $0.currentItem != nil &&
             ($0.currentItem?.duration.seconds ?? 0) > 1.0
@@ -167,6 +159,7 @@ class ViewController: NSViewController {
 
         firstNonNilAVPlayer()?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.status))
         firstNonNilAVPlayer()?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.rate))
+        firstNonNilAVPlayer()?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem))
 
         avPlayers = []
         leftAVPlayer = nil
@@ -194,57 +187,99 @@ class ViewController: NSViewController {
     // Calculates if the sentinel video has ended.
     // move on to the next video in our list, if we've got one
     func pollCheckForEndOfVideo() {
+
+        guard let videos = videos else { return }
+
         let currentProgress = self.progress
-
-        // Try loading from cache here in the background, so we can try to load faster.
-        if currentProgress >= 30 && !isPreloadingFlag {
-
-            // Figure out next viedoes, if they exist, then set the preload avplayers.
-            // next video, if we have one
-            if currVideoIndex < (videos?.videoDictionary.keys.count ?? 0) - 1 {
-                isPreloadingFlag = true
-                let tmpCurrVideoIndex = currVideoIndex + 1
-                let keys = self.videos?.videoDictionary.keys.sorted()
-                let nextKey = keys?[tmpCurrVideoIndex]
-                let nextVideo = self.videos?.videoDictionary[nextKey!]!
-
-                self.preloadAVPlayers = preloadPlayers(for: nextVideo!)
-            }
-
-        }
+//
+//        // Try loading from cache here in the background, so we can try to load faster.
+//        if currentProgress >= 30 && !isPreloadingFlag {
+//
+//            // Figure out next viedoes, if they exist, then set the preload avplayers.
+//            // next video, if we have one
+//            if currVideoIndex < (videos?.videoDictionary.keys.count ?? 0) - 1 {
+//                isPreloadingFlag = true
+//                let tmpCurrVideoIndex = currVideoIndex + 1
+//                let keys = self.videos?.videoDictionary.keys.sorted()
+//                let nextKey = keys?[tmpCurrVideoIndex]
+//                let nextVideo = self.videos?.videoDictionary[nextKey!]!
+//
+//                self.preloadAVPlayers = preloadPlayers(for: nextVideo!)
+//            }
+//
+//        }
 
         if currentProgress >= 100 {
 
-            // Play next video, if we have one
-            if currVideoIndex < (videos?.videoDictionary.keys.count ?? 0) - 1 {
-                print("Boom")
+            let savedIsPlaying = isPlaying
 
-                currVideoIndex += 1
-                let keys = self.videos?.videoDictionary.keys.sorted()
-                let nextKey = keys?[currVideoIndex]
-                let nextVideo = self.videos?.videoDictionary[nextKey!]!
-                setVideoPlayers(to: nextVideo!, playAutomatically: true)
-                tableView.selectRowIndexes(IndexSet(integer: currVideoIndex), byExtendingSelection: false)
-            } else {
-                // tear down polling timers
-                tearDownTimersAndObservers()
-                removeAllLoadedVideos(nil)
+            resetQueuedVideos(index: videos.currentIndex + 1, count: 1)
+            if savedIsPlaying {
+                play()
             }
+
+//            // Play next video, if we have one
+//            if currVideoIndex < (videos?.videoDictionary.keys.count ?? 0) - 1 {
+//                print("Boom")
+//
+//                currVideoIndex += 1
+//                let keys = self.videos?.videoDictionary.keys.sorted()
+//                let nextKey = keys?[currVideoIndex]
+//                let nextVideo = self.videos?.videoDictionary[nextKey!]!
+//                setVideoPlayers(to: nextVideo!, playAutomatically: true)
+//                tableView.selectRowIndexes(IndexSet(integer: currVideoIndex), byExtendingSelection: false)
+//            } else {
+//                // tear down polling timers
+//                tearDownTimersAndObservers()
+//                removeAllLoadedVideos(nil)
+//            }
         }
     }
 
-    func preloadPlayers(for video: [TeslaCamVideo]) -> [AVPlayer] {
+    func resetQueuedVideos(index: Int, count: Int) {
+        guard let videos = videos else { return }
 
-        let leftVideo = video.first(where: { $0.cameraType == .left })
-        let centerVideo = video.first(where: { $0.cameraType == .front })
-        let rightVideo = video.first(where: { $0.cameraType == .right })
+        // Remove everything from current playlist queue
+        avPlayers.forEach { $0.removeAllItems() }
 
-        // Load the videos into AVPlayers
-        preloadLeftAVPlayer = AVPlayer(url: leftVideo?.fileURL ?? URL(fileURLWithPath: ""))
-        preloadCenterAVPlayer = AVPlayer(url: centerVideo?.fileURL ?? URL(fileURLWithPath: ""))
-        preloadRightAVPlayer = AVPlayer(url: rightVideo?.fileURL ?? URL(fileURLWithPath: ""))
+        // Set next video immediately
+        let tuple = videos.videoQueue(startIndex: index, count: 1)
+        let (leftVideos, centerVideos, rightVideos) = tuple
 
-        return [preloadLeftAVPlayer!, preloadCenterAVPlayer!, preloadRightAVPlayer!]
+        for leftVideo in leftVideos {
+            leftAVPlayer?.insert(leftVideo, after: nil)
+        }
+        for centerVideo in centerVideos {
+            centerAVPlayer?.insert(centerVideo, after: nil)
+        }
+        for rightVideo in rightVideos {
+            rightAVPlayer?.insert(rightVideo, after: nil)
+        }
+
+        videos.currentIndex = index
+    }
+
+    func appendVideosToQueueIfWeHaveThem() {
+        guard let videos = videos else { return }
+        guard let lastLoadedAsset = firstNonNilAVPlayer()?.items().last else { return }
+        guard let currMaxIndex = videos.indexFromAVPlayerItem(item: lastLoadedAsset) else { return }
+
+        let nextIndex = currMaxIndex + 1
+
+        print("Loading next 2 videos from cache at index \(nextIndex)")
+
+        let tuple = videos.videoQueue(startIndex: nextIndex, count: 1)
+        let (leftVideos, centerVideos, rightVideos) = tuple
+
+        for leftVideo in leftVideos {
+            leftAVPlayer?.insert(leftVideo, after: nil)
+        }
+        for centerVideo in centerVideos {
+            centerAVPlayer?.insert(centerVideo, after: nil)
+        }
+        for rightVideo in rightVideos {
+            rightAVPlayer?.insert(rightVideo, after: nil)
+        }
     }
 
     func setVideoPlayers(to video: [TeslaCamVideo], playAutomatically: Bool) {
@@ -256,29 +291,12 @@ class ViewController: NSViewController {
 
         updateVideoWindowTitle()
 
-        if preloadAVPlayers.count > 0 {
-            leftAVPlayer = preloadLeftAVPlayer
-            centerAVPlayer = preloadCenterAVPlayer
-            rightAVPlayer = preloadRightAVPlayer
-
-            preloadLeftAVPlayer = nil
-            preloadCenterAVPlayer = nil
-            preloadRightAVPlayer = nil
-            preloadAVPlayers.removeAll()
-
-            isPreloadingFlag = false
-        } else {
-
-            let leftVideo = video.first(where: { $0.cameraType == .left })
-            let centerVideo = video.first(where: { $0.cameraType == .front })
-            let rightVideo = video.first(where: { $0.cameraType == .right })
-
-            // Load the videos into AVPlayers
-            leftAVPlayer = AVPlayer(url: leftVideo?.fileURL ?? URL(fileURLWithPath: ""))
-            centerAVPlayer = AVPlayer(url: centerVideo?.fileURL ?? URL(fileURLWithPath: ""))
-            rightAVPlayer = AVPlayer(url: rightVideo?.fileURL ?? URL(fileURLWithPath: ""))
-
-        }
+        guard let videoQueueTuple = videos?.videoQueue(startIndex: 50, count: 4) else { return }
+        videos?.currentIndex = 0
+        let (leftVideos, centerVideos, rightVideos) = videoQueueTuple
+        leftAVPlayer = AVQueuePlayer(items: leftVideos)
+        centerAVPlayer = AVQueuePlayer(items: centerVideos)
+        rightAVPlayer = AVQueuePlayer(items: rightVideos)
 
         // Load into player views
         self.leftPlayerView.player = leftAVPlayer
@@ -294,6 +312,7 @@ class ViewController: NSViewController {
         timeObserver = timeObserver(for: firstNonNilAVPlayer()!)
         firstNonNilAVPlayer()?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.initial, .new], context: nil)
         firstNonNilAVPlayer()?.addObserver(self, forKeyPath: #keyPath(AVPlayer.rate), options: [.initial, .new], context: nil)
+        firstNonNilAVPlayer()?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem), options: [.initial, .new], context: nil)
 
         DispatchQueue.main.async {
             if playAutomatically { self.play() }
@@ -305,9 +324,11 @@ class ViewController: NSViewController {
             guard let keyPath = keyPath else { return }
             switch keyPath {
             case #keyPath(AVPlayer.status):
-                self.playerStatusChanged(player: object as? AVPlayer)
+                self.playerStatusChanged(player: object as? AVQueuePlayer)
             case #keyPath(AVPlayer.rate):
-                self.updatePlayingState(player: object as? AVPlayer)
+                self.updatePlayingState(player: object as? AVQueuePlayer)
+            case #keyPath(AVPlayer.currentItem):
+                self.playerItemChanged(player: object as? AVQueuePlayer)
             default:
                 super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             }
@@ -330,12 +351,13 @@ extension ViewController {
         self.leftPlayerView.player = nil
         self.centerPlayerView.player = nil
         self.rightPlayerView.player = nil
-        self.preloadAVPlayers.removeAll()
-        self.preloadLeftAVPlayer = nil
-        self.preloadCenterAVPlayer = nil
-        self.preloadRightAVPlayer = nil
-        self.isPreloadingFlag = false
-        self.currVideoIndex = 0
+//        self.preloadAVPlayers.removeAll()
+//        self.preloadLeftAVPlayer = nil
+//        self.preloadCenterAVPlayer = nil
+//        self.preloadRightAVPlayer = nil
+//        self.isPreloadingFlag = false
+        //TODO: Fixme
+//        self.currVideoIndex = 0
         self.progressSlider.doubleValue = 0
         self.updateVideoWindowTitle()
     }
@@ -344,7 +366,29 @@ extension ViewController {
 // MARK: Observers
 
 extension ViewController {
-    func playerStatusChanged(player: AVPlayer?) {
+
+    func playerItemChanged(player: AVQueuePlayer?) {
+        guard let player = player else { return }
+        guard let videos = videos else { return }
+
+        // Update datasource, tableView indexes
+        if let currentAsset = player.currentItem, let currIndex = videos.indexFromAVPlayerItem(item: currentAsset) {
+            videos.currentIndex = currIndex
+            tableView.selectRowIndexes(IndexSet(integer: currIndex), byExtendingSelection: false)
+        }
+
+        appendVideosToQueueIfWeHaveThem()
+
+        if player.currentItem == nil {
+            appendVideosToQueueIfWeHaveThem()
+            print("Got to end of queue")
+        } else {
+            print("Player item changed.")
+        }
+
+    }
+
+    func playerStatusChanged(player: AVQueuePlayer?) {
         guard let player = player else { return }
         switch player.status {
         case .readyToPlay:
@@ -355,7 +399,7 @@ extension ViewController {
         }
     }
 
-    func updatePlayingState(player: AVPlayer?) {
+    func updatePlayingState(player: AVQueuePlayer?) {
         guard let player = player else { return }
         self.playButton.title = !player.rate.isZero ? "\u{f04c}" : "\u{f04b}"
 
@@ -447,12 +491,9 @@ extension ViewController {
         guard tableView.selectedRow >= 0 else {
                 return
         }
-        guard let videoDict = videos?.videoDictionary else { return }
-        let sortedKeys = videoDict.keys.sorted()
-        let rowIndex = sortedKeys[tableView.selectedRow]
-        currVideoIndex = tableView.selectedRow
-        guard let nextVideo = videoDict[rowIndex] else { return }
-        setVideoPlayers(to: nextVideo, playAutomatically: true)
+        guard let videos = videos else { return }
+
+        resetQueuedVideos(index: tableView.selectedRow, count: 1)
     }
 }
 

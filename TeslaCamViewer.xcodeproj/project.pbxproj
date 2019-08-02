@@ -16,7 +16,7 @@
 		2482D906227F627E00A20F1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2482D904227F627E00A20F1D /* Main.storyboard */; };
 		2482D911227F657100A20F1D /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2482D90F227F657100A20F1D /* AVKit.framework */; };
 		2482D912227F657100A20F1D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2482D910227F657100A20F1D /* AVFoundation.framework */; };
-		2482D914227F65D000A20F1D /* DirectoryCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D913227F65D000A20F1D /* DirectoryCrawler.swift */; };
+		2482D914227F65D000A20F1D /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D913227F65D000A20F1D /* DataSource.swift */; };
 		24CC880C229248EA00B5BF9C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24CC880B229248EA00B5BF9C /* Utils.swift */; };
 		24CC880E2293975F00B5BF9C /* fa-solid-900.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24CC880D2293975F00B5BF9C /* fa-solid-900.ttf */; };
 /* End PBXBuildFile section */
@@ -46,7 +46,7 @@
 		2482D908227F627E00A20F1D /* TeslaCamViewer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TeslaCamViewer.entitlements; sourceTree = "<group>"; };
 		2482D90F227F657100A20F1D /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		2482D910227F657100A20F1D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		2482D913227F65D000A20F1D /* DirectoryCrawler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryCrawler.swift; sourceTree = "<group>"; };
+		2482D913227F65D000A20F1D /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		24CC880B229248EA00B5BF9C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		24CC880D2293975F00B5BF9C /* fa-solid-900.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fa-solid-900.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,7 +96,7 @@
 				24796FD322EE7A7A00713DF3 /* Views */,
 				2482D8FE227F627C00A20F1D /* AppDelegate.swift */,
 				2482D900227F627C00A20F1D /* ViewController.swift */,
-				2482D913227F65D000A20F1D /* DirectoryCrawler.swift */,
+				2482D913227F65D000A20F1D /* DataSource.swift */,
 				24CC880B229248EA00B5BF9C /* Utils.swift */,
 				2482D902227F627E00A20F1D /* Assets.xcassets */,
 				2482D904227F627E00A20F1D /* Main.storyboard */,
@@ -197,7 +197,7 @@
 				24796FD922EE7C1000713DF3 /* IndeterminateProgressView.swift in Sources */,
 				2482D901227F627C00A20F1D /* ViewController.swift in Sources */,
 				2482D8FF227F627C00A20F1D /* AppDelegate.swift in Sources */,
-				2482D914227F65D000A20F1D /* DirectoryCrawler.swift in Sources */,
+				2482D914227F65D000A20F1D /* DataSource.swift in Sources */,
 				24CC880C229248EA00B5BF9C /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
