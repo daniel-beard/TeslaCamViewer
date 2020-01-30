@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.AVKitIBPlugin" version="14490.70"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.AVKitIBPlugin" version="15505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -709,8 +710,8 @@ CA
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="TeslaCamViewer" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="765" height="636"/>
+                    <view key="view" misplaced="YES" id="m2S-Jp-Qdl">
+                        <rect key="frame" x="0.0" y="0.0" width="765" height="611"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cV9-XG-drs" userLabel="PlayButton">
@@ -718,7 +719,7 @@ CA
                                 <constraints>
                                     <constraint firstAttribute="width" constant="63" id="o7F-3h-ahD"/>
                                 </constraints>
-                                <buttonCell key="cell" type="push" title="" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="hId-RJ-Rcl">
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="Play" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="hId-RJ-Rcl">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" size="14" name="FontAwesome5Free-Solid"/>
                                 </buttonCell>
@@ -727,7 +728,7 @@ CA
                                 </connections>
                             </button>
                             <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ee4-dY-2X4" userLabel="SpeedControl">
-                                <rect key="frame" x="559" y="10" width="198" height="23"/>
+                                <rect key="frame" x="559" y="10" width="190" height="23"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="4oR-Fz-sCh">
                                     <font key="font" metaFont="system"/>
                                     <segments>
@@ -747,20 +748,20 @@ CA
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="100" tickMarkPosition="below" numberOfTickMarks="20" sliderType="linear" id="o5S-64-UaQ"/>
                             </slider>
                             <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QNU-TL-zfD">
-                                <rect key="frame" x="0.0" y="40" width="765" height="596"/>
+                                <rect key="frame" x="0.0" y="40" width="765" height="509"/>
                                 <subviews>
-                                    <customView id="y0s-0r-cvf">
-                                        <rect key="frame" x="0.0" y="0.0" width="534" height="596"/>
+                                    <customView misplaced="YES" id="y0s-0r-cvf">
+                                        <rect key="frame" x="0.0" y="0.0" width="534" height="509"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="n04-2u-Otx" userLabel="LeftPlayerView">
-                                                <rect key="frame" x="0.0" y="0.0" width="267" height="298"/>
+                                                <rect key="frame" x="0.0" y="-26" width="267" height="255"/>
                                             </avPlayerView>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="ApR-pf-1xc" userLabel="RightPlayerView">
-                                                <rect key="frame" x="267" y="0.0" width="267" height="298"/>
+                                                <rect key="frame" x="267" y="-26" width="267" height="255"/>
                                             </avPlayerView>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="kxP-4Q-8tB" userLabel="CenterPlayerView">
-                                                <rect key="frame" x="0.0" y="298" width="534" height="298"/>
+                                                <rect key="frame" x="0.0" y="229" width="534" height="254"/>
                                             </avPlayerView>
                                         </subviews>
                                         <constraints>
@@ -779,22 +780,22 @@ CA
                                         </constraints>
                                     </customView>
                                     <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="xR5-wO-c4M">
-                                        <rect key="frame" x="535" y="0.0" width="230" height="596"/>
+                                        <rect key="frame" x="535" y="0.0" width="230" height="509"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <clipView key="contentView" drawsBackground="NO" id="ZeX-J1-W4N">
-                                            <rect key="frame" x="1" y="0.0" width="228" height="595"/>
+                                            <rect key="frame" x="1" y="0.0" width="228" height="508"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="wV3-zg-m5Q" viewBased="YES" id="C5c-gL-xZH">
-                                                    <rect key="frame" x="0.0" y="0.0" width="228" height="570"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="228" height="483"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                     <tableColumns>
                                                         <tableColumn width="225" minWidth="40" maxWidth="1000" id="JPB-bD-EFZ">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Videos">
-                                                                <font key="font" metaFont="smallSystem"/>
+                                                                <font key="font" metaFont="menu" size="11"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                             </tableHeaderCell>
@@ -810,7 +811,7 @@ CA
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Qwb-ZT-hey">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="225" height="17"/>
+                                                                            <rect key="frame" x="0.0" y="1" width="225" height="16"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="QGl-kf-OKJ">
                                                                                 <font key="font" metaFont="system"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -884,4 +885,7 @@ CA
             <point key="canvasLocation" x="563.5" y="701"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Play" width="100" height="100"/>
+    </resources>
 </document>

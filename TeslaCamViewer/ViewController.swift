@@ -357,8 +357,8 @@ extension ViewController {
 
     func updatePlayingState(player: AVPlayer?) {
         guard let player = player else { return }
-        self.playButton.title = !player.rate.isZero ? "\u{f04c}" : "\u{f04b}"
-
+        self.playButton.image = player.rate.isZero ? NSImage(named: "Play") : NSImage(named: "Pause")
+        
         // Debug only
         print("Player state did change to: \(player.rate.isZero ? "paused" : "playing") - \(player)")
 
