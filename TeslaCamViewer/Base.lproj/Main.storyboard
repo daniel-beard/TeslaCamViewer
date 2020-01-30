@@ -711,7 +711,7 @@ CA
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="TeslaCamViewer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" misplaced="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="765" height="611"/>
+                        <rect key="frame" x="0.0" y="0.0" width="765" height="133"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cV9-XG-drs" userLabel="PlayButton">
@@ -748,20 +748,23 @@ CA
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="100" tickMarkPosition="below" numberOfTickMarks="20" sliderType="linear" id="o5S-64-UaQ"/>
                             </slider>
                             <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QNU-TL-zfD">
-                                <rect key="frame" x="0.0" y="40" width="765" height="509"/>
+                                <rect key="frame" x="0.0" y="40" width="765" height="93"/>
                                 <subviews>
                                     <customView misplaced="YES" id="y0s-0r-cvf">
-                                        <rect key="frame" x="0.0" y="0.0" width="534" height="509"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="534" height="93"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
+                                            <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="kxP-4Q-8tB" userLabel="CenterPlayerView">
+                                                <rect key="frame" x="0.0" y="21" width="534" height="46"/>
+                                            </avPlayerView>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="n04-2u-Otx" userLabel="LeftPlayerView">
-                                                <rect key="frame" x="0.0" y="-26" width="267" height="255"/>
+                                                <rect key="frame" x="0.0" y="-26" width="178" height="47"/>
                                             </avPlayerView>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="ApR-pf-1xc" userLabel="RightPlayerView">
-                                                <rect key="frame" x="267" y="-26" width="267" height="255"/>
+                                                <rect key="frame" x="356" y="-26" width="178" height="47"/>
                                             </avPlayerView>
-                                            <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="kxP-4Q-8tB" userLabel="CenterPlayerView">
-                                                <rect key="frame" x="0.0" y="229" width="534" height="254"/>
+                                            <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="nxv-V0-lLe" userLabel="BackPlayerView">
+                                                <rect key="frame" x="178" y="-26" width="178" height="47"/>
                                             </avPlayerView>
                                         </subviews>
                                         <constraints>
@@ -771,8 +774,12 @@ CA
                                             <constraint firstItem="kxP-4Q-8tB" firstAttribute="height" secondItem="n04-2u-Otx" secondAttribute="height" id="AXj-SW-vHm"/>
                                             <constraint firstItem="n04-2u-Otx" firstAttribute="width" secondItem="ApR-pf-1xc" secondAttribute="width" id="GSq-z8-QvD"/>
                                             <constraint firstAttribute="trailing" secondItem="ApR-pf-1xc" secondAttribute="trailing" id="HvG-8E-gaf"/>
-                                            <constraint firstItem="ApR-pf-1xc" firstAttribute="leading" secondItem="n04-2u-Otx" secondAttribute="trailing" id="fuP-sQ-Uwf"/>
+                                            <constraint firstItem="nxv-V0-lLe" firstAttribute="height" secondItem="ApR-pf-1xc" secondAttribute="height" id="O0H-zH-3eN"/>
+                                            <constraint firstItem="nxv-V0-lLe" firstAttribute="width" secondItem="ApR-pf-1xc" secondAttribute="width" id="Xj6-nB-h68"/>
+                                            <constraint firstItem="nxv-V0-lLe" firstAttribute="top" secondItem="ApR-pf-1xc" secondAttribute="top" id="Y0j-Gv-aWY"/>
+                                            <constraint firstItem="nxv-V0-lLe" firstAttribute="trailing" secondItem="ApR-pf-1xc" secondAttribute="leading" id="bz2-nO-pGK"/>
                                             <constraint firstItem="kxP-4Q-8tB" firstAttribute="top" secondItem="y0s-0r-cvf" secondAttribute="top" id="jVj-Q9-cXR"/>
+                                            <constraint firstItem="nxv-V0-lLe" firstAttribute="leading" secondItem="n04-2u-Otx" secondAttribute="trailing" id="piL-Wz-qOV"/>
                                             <constraint firstAttribute="bottom" secondItem="ApR-pf-1xc" secondAttribute="bottom" id="pyr-7P-XM7"/>
                                             <constraint firstAttribute="bottom" secondItem="n04-2u-Otx" secondAttribute="bottom" id="sEM-kd-sjd"/>
                                             <constraint firstAttribute="trailing" secondItem="kxP-4Q-8tB" secondAttribute="trailing" id="y5p-YI-eT9"/>
@@ -780,14 +787,14 @@ CA
                                         </constraints>
                                     </customView>
                                     <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="xR5-wO-c4M">
-                                        <rect key="frame" x="535" y="0.0" width="230" height="509"/>
+                                        <rect key="frame" x="535" y="0.0" width="230" height="93"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <clipView key="contentView" drawsBackground="NO" id="ZeX-J1-W4N">
-                                            <rect key="frame" x="1" y="0.0" width="228" height="508"/>
+                                            <rect key="frame" x="1" y="0.0" width="228" height="92"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="wV3-zg-m5Q" viewBased="YES" id="C5c-gL-xZH">
-                                                    <rect key="frame" x="0.0" y="0.0" width="228" height="483"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="228" height="67"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -795,7 +802,7 @@ CA
                                                     <tableColumns>
                                                         <tableColumn width="225" minWidth="40" maxWidth="1000" id="JPB-bD-EFZ">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Videos">
-                                                                <font key="font" metaFont="menu" size="11"/>
+                                                                <font key="font" metaFont="controlContent" size="11"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                             </tableHeaderCell>
@@ -871,6 +878,7 @@ CA
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backPlayerView" destination="nxv-V0-lLe" id="eeI-oM-Drt"/>
                         <outlet property="centerPlayerView" destination="kxP-4Q-8tB" id="giM-5P-Rgv"/>
                         <outlet property="leftPlayerView" destination="n04-2u-Otx" id="idf-QA-DdD"/>
                         <outlet property="playButton" destination="cV9-XG-drs" id="tR0-zp-Hna"/>

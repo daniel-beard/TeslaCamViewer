@@ -17,11 +17,13 @@ class ViewController: NSViewController {
     @IBOutlet weak var leftPlayerView: AVPlayerView!
     @IBOutlet weak var centerPlayerView: AVPlayerView!
     @IBOutlet weak var rightPlayerView: AVPlayerView!
+    @IBOutlet weak var backPlayerView: AVPlayerView!
     var avPlayerViews = [AVPlayerView]()
 
     var leftAVPlayer: AVPlayer?
     var centerAVPlayer: AVPlayer?
     var rightAVPlayer: AVPlayer?
+    var backAVPlayer: AVPlayer?
     var avPlayers = [AVPlayer]()
 
     //TODO: All this proeloading feels like it should be extracted out into a helper.
@@ -30,6 +32,7 @@ class ViewController: NSViewController {
     var preloadLeftAVPlayer: AVPlayer?
     var preloadCenterAVPlayer: AVPlayer?
     var preloadRightAVPlayer: AVPlayer?
+    var preloadBackAVPlayer: AVPlayer?
     var preloadAVPlayers = [AVPlayer]() //not sure if I'll need this.
 
     var timeObserver: Any?
@@ -82,6 +85,7 @@ class ViewController: NSViewController {
         leftPlayerView.controlsStyle = .none
         centerPlayerView.controlsStyle = .none
         rightPlayerView.controlsStyle = .none
+        backPlayerView.controlsStyle = .none
 
         // setup slider action
         progressSlider.target = self
@@ -172,9 +176,11 @@ class ViewController: NSViewController {
         leftAVPlayer = nil
         centerAVPlayer = nil
         rightAVPlayer = nil
+        backAVPlayer = nil
         leftPlayerView.player = nil
         centerPlayerView.player = nil
         rightPlayerView.player = nil
+        backPlayerView.player = nil
     }
 
     func refreshProgressBar() {
@@ -238,13 +244,15 @@ class ViewController: NSViewController {
         let leftVideo = video.first(where: { $0.cameraType == .left })
         let centerVideo = video.first(where: { $0.cameraType == .front })
         let rightVideo = video.first(where: { $0.cameraType == .right })
+        let backVideo = video.first(where: { $0.cameraType == .back })
 
         // Load the videos into AVPlayers
         preloadLeftAVPlayer = AVPlayer(url: leftVideo?.fileURL ?? URL(fileURLWithPath: ""))
         preloadCenterAVPlayer = AVPlayer(url: centerVideo?.fileURL ?? URL(fileURLWithPath: ""))
         preloadRightAVPlayer = AVPlayer(url: rightVideo?.fileURL ?? URL(fileURLWithPath: ""))
+        preloadBackAVPlayer = AVPlayer(url: backVideo?.fileURL ?? URL(fileURLWithPath: ""))
 
-        return [preloadLeftAVPlayer!, preloadCenterAVPlayer!, preloadRightAVPlayer!]
+        return [preloadLeftAVPlayer!, preloadCenterAVPlayer!, preloadRightAVPlayer!, preloadBackAVPlayer!]
     }
 
     func setVideoPlayers(to video: [TeslaCamVideo], playAutomatically: Bool) {
@@ -260,10 +268,12 @@ class ViewController: NSViewController {
             leftAVPlayer = preloadLeftAVPlayer
             centerAVPlayer = preloadCenterAVPlayer
             rightAVPlayer = preloadRightAVPlayer
+            backAVPlayer = preloadBackAVPlayer
 
             preloadLeftAVPlayer = nil
             preloadCenterAVPlayer = nil
             preloadRightAVPlayer = nil
+            preloadBackAVPlayer = nil
             preloadAVPlayers.removeAll()
 
             isPreloadingFlag = false
@@ -272,11 +282,13 @@ class ViewController: NSViewController {
             let leftVideo = video.first(where: { $0.cameraType == .left })
             let centerVideo = video.first(where: { $0.cameraType == .front })
             let rightVideo = video.first(where: { $0.cameraType == .right })
+            let backVideo = video.first(where: { $0.cameraType == .back })
 
             // Load the videos into AVPlayers
             leftAVPlayer = AVPlayer(url: leftVideo?.fileURL ?? URL(fileURLWithPath: ""))
             centerAVPlayer = AVPlayer(url: centerVideo?.fileURL ?? URL(fileURLWithPath: ""))
             rightAVPlayer = AVPlayer(url: rightVideo?.fileURL ?? URL(fileURLWithPath: ""))
+            backAVPlayer = AVPlayer(url: backVideo?.fileURL ?? URL(fileURLWithPath: ""))
 
         }
 
@@ -284,8 +296,9 @@ class ViewController: NSViewController {
         self.leftPlayerView.player = leftAVPlayer
         self.centerPlayerView.player = centerAVPlayer
         self.rightPlayerView.player = rightAVPlayer
-        avPlayers = [leftAVPlayer!, centerAVPlayer!, rightAVPlayer!]
-        avPlayerViews = [leftPlayerView!, centerPlayerView!, rightPlayerView!]
+        self.backPlayerView.player = backAVPlayer
+        avPlayers = [leftAVPlayer!, centerAVPlayer!, rightAVPlayer!, backAVPlayer!]
+        avPlayerViews = [leftPlayerView!, centerPlayerView!, rightPlayerView!, backPlayerView!]
 
         // Set resize behavior
         avPlayerViews.forEach { $0.videoGravity = .resizeAspectFill }
@@ -326,14 +339,17 @@ extension ViewController {
         self.leftAVPlayer = nil
         self.centerAVPlayer = nil
         self.rightAVPlayer = nil
+        self.backAVPlayer = nil
         self.avPlayerViews.removeAll()
         self.leftPlayerView.player = nil
         self.centerPlayerView.player = nil
         self.rightPlayerView.player = nil
+        self.backPlayerView.player = nil
         self.preloadAVPlayers.removeAll()
         self.preloadLeftAVPlayer = nil
         self.preloadCenterAVPlayer = nil
         self.preloadRightAVPlayer = nil
+        self.preloadBackAVPlayer = nil
         self.isPreloadingFlag = false
         self.currVideoIndex = 0
         self.progressSlider.doubleValue = 0

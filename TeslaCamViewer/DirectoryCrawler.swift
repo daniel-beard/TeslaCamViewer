@@ -9,19 +9,21 @@
 import Foundation
 
 // Walks an input directory searching for teslaCam recordings.
-// Returns an ordered list of recordings containing left, front, and right repeater video
+// Returns an ordered list of recordings containing left, front, right, back repeater video
 // if the left and right repeater files are not found, they are not used here.
 
 enum TeslaCameraType: String {
     case front
     case left
     case right
+    case back
 
     func rawValue() -> String {
         switch self {
         case .front:            return "front"
         case .right:            return "right_repeater"
         case .left:             return "left_repeater"
+        case .back:             return "back"
         }
     }
 }
@@ -45,8 +47,10 @@ struct TeslaCamVideo: Equatable, Hashable {
             case "front":           self.cameraType = .front
             case "right_repeater":  self.cameraType = .right
             case "left_repeater":   self.cameraType = .left
-            //TODO: Ignore, but log these in future.
-            default: return nil//fatalError("Unknown camera type: \(String(describing: repeaterType)) For filename: \(fileURL)"); return nil
+            case "back":            self.cameraType = .back
+            default:
+                print("Unknown repeater type: \(String(describing: repeaterType))")
+                return nil
         }
         components = components.dropLast()
         components = components.map { $0.split(separator: "_" )}.flatMap({$0})
