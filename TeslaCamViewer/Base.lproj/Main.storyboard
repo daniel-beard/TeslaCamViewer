@@ -710,8 +710,8 @@ CA
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="TeslaCamViewer" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="765" height="133"/>
+                    <view key="view" id="m2S-Jp-Qdl">
+                        <rect key="frame" x="0.0" y="0.0" width="765" height="240"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cV9-XG-drs" userLabel="PlayButton">
@@ -748,23 +748,26 @@ CA
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="100" tickMarkPosition="below" numberOfTickMarks="20" sliderType="linear" id="o5S-64-UaQ"/>
                             </slider>
                             <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QNU-TL-zfD">
-                                <rect key="frame" x="0.0" y="40" width="765" height="93"/>
+                                <rect key="frame" x="0.0" y="40" width="765" height="200"/>
                                 <subviews>
-                                    <customView misplaced="YES" id="y0s-0r-cvf">
-                                        <rect key="frame" x="0.0" y="0.0" width="534" height="93"/>
+                                    <customView id="y0s-0r-cvf">
+                                        <rect key="frame" x="0.0" y="0.0" width="534" height="200"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="kxP-4Q-8tB" userLabel="CenterPlayerView">
-                                                <rect key="frame" x="0.0" y="21" width="534" height="46"/>
+                                                <rect key="frame" x="0.0" y="100" width="534" height="100"/>
                                             </avPlayerView>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="n04-2u-Otx" userLabel="LeftPlayerView">
-                                                <rect key="frame" x="0.0" y="-26" width="178" height="47"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="178" height="100"/>
                                             </avPlayerView>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="ApR-pf-1xc" userLabel="RightPlayerView">
-                                                <rect key="frame" x="356" y="-26" width="178" height="47"/>
+                                                <rect key="frame" x="356" y="0.0" width="178" height="100"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="Xd5-9f-KQx"/>
+                                                </constraints>
                                             </avPlayerView>
                                             <avPlayerView controlsStyle="inline" translatesAutoresizingMaskIntoConstraints="NO" id="nxv-V0-lLe" userLabel="BackPlayerView">
-                                                <rect key="frame" x="178" y="-26" width="178" height="47"/>
+                                                <rect key="frame" x="178" y="0.0" width="178" height="100"/>
                                             </avPlayerView>
                                         </subviews>
                                         <constraints>
@@ -787,14 +790,14 @@ CA
                                         </constraints>
                                     </customView>
                                     <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="xR5-wO-c4M">
-                                        <rect key="frame" x="535" y="0.0" width="230" height="93"/>
+                                        <rect key="frame" x="535" y="0.0" width="230" height="200"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <clipView key="contentView" drawsBackground="NO" id="ZeX-J1-W4N">
-                                            <rect key="frame" x="1" y="0.0" width="228" height="92"/>
+                                        <clipView key="contentView" ambiguous="YES" drawsBackground="NO" id="ZeX-J1-W4N">
+                                            <rect key="frame" x="1" y="0.0" width="228" height="199"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="wV3-zg-m5Q" viewBased="YES" id="C5c-gL-xZH">
-                                                    <rect key="frame" x="0.0" y="0.0" width="228" height="67"/>
+                                                <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="wV3-zg-m5Q" viewBased="YES" id="C5c-gL-xZH">
+                                                    <rect key="frame" x="0.0" y="0.0" width="228" height="174"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -802,7 +805,7 @@ CA
                                                     <tableColumns>
                                                         <tableColumn width="225" minWidth="40" maxWidth="1000" id="JPB-bD-EFZ">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Videos">
-                                                                <font key="font" metaFont="controlContent" size="11"/>
+                                                                <font key="font" metaFont="message" size="11"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                             </tableHeaderCell>
@@ -846,7 +849,7 @@ CA
                                             <rect key="frame" x="1" y="579" width="225" height="16"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="gEg-0i-S3a">
+                                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="gEg-0i-S3a">
                                             <rect key="frame" x="224" y="17" width="15" height="102"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
