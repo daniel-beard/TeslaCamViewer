@@ -9,7 +9,9 @@
 import AppKit
 
 // Constants
-let didOpenVideoNotification = NSNotification.Name(rawValue: "DidOpenVideoFolder")
+extension Notification.Name {
+    static let openVideoFolder = NSNotification.Name(rawValue: "OpenVideoFolder")
+}
 
 func dialogOKCancel(question: String, text: String) -> Bool {
     let alert = NSAlert()
