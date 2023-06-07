@@ -102,24 +102,57 @@ struct MainView: View {
                                 let video = dataSource.videos[index]
                                 HStack {
                                     Text(video.name)
+
                                 }
                                 .onTapGesture(count: 2) {
                                     dataSource.currentIndex = index
                                 }
                                 .background(index == dataSource.currentIndex ? .blue : .clear)
+
                             }
+                            .scrollContentBackground(.hidden)
+                            .background(Colors.defaultBackground)
                             .frame(maxWidth: geo.size.width * 0.2)
                         }
                     }
                 }
                 // Progress slider
                 if dataSource.showSlider {
-                    Slider(value: Binding(get: {
+//                    Slider(value: Binding(get: {
+//                        self.dataSource.progress
+//                    }, set: { (newValue) in
+//                        self.dataSource.progress = newValue
+//                        self.dataSource.seek(toPercentage: newValue)
+//                    }))
+//                }
+                    CustomSlider(value: Binding(get: {
                         self.dataSource.progress
                     }, set: { (newValue) in
                         self.dataSource.progress = newValue
                         self.dataSource.seek(toPercentage: newValue)
-                    }))
+                    }), range: (0, 1)) { modifiers in
+                        ZStack {
+                            LinearGradient(gradient: .init(colors: [.red, .orange, .pink]), startPoint: .leading, endPoint: .trailing)
+                            ZStack {
+                                Circle().fill(Color.white)
+                                Circle().stroke(Color.black.opacity(0.2), lineWidth: 2)
+                                // TODODB: Crash is because of below commented out code. Not sure why, but just replace this with an image
+                                // Create your own SVG that is like https://fontawesome.com/icons/car-side-bolt?f=classic&s=solid and bolt.car.circle.fill
+                                Image("car_thumb")
+                                    .resizable(resizingMode: .stretch)
+//                                    .frame(width: 44, height: 44)
+                                    .foregroundColor(.red)
+//                                    .padding(1)
+//                                    .scaledToFill()
+                            }
+                            .padding([.top, .bottom], 1)
+                            .modifier(modifiers.knob)
+                        }
+                        .cornerRadius(15)
+                    }
+                    .padding(3)
+                    .frame(height: 44)
+                    .frame(maxWidth: .infinity)
                 }
             }
 
@@ -135,6 +168,7 @@ struct MainView: View {
             }
         }
         .navigationTitle(dataSource.windowTitle)
+        .background(Colors.defaultBackground)
     }
 }
 

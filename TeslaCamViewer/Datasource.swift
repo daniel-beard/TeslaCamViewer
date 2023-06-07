@@ -109,7 +109,6 @@ class VideoDataSource: ObservableObject {
     @Published var currentVideo: TeslaCamVideo?
 
     private var timeObserver: Any? = nil
-    private var statusObserver: AnyCancellable? = nil
 
     @Published var currentIndex: Int = 0 {
         didSet {
@@ -129,6 +128,8 @@ class VideoDataSource: ObservableObject {
             self.rightAVPlayer = avPlayer(forURL: currentVideo.rightVideo?.fileURL)
             self.frontAVPlayer = avPlayer(forURL: currentVideo.frontVideo?.fileURL)
             self.backAVPlayer  = avPlayer(forURL: currentVideo.backVideo?.fileURL)
+
+            playing = playing
 
             addObservers()
         }
@@ -165,13 +166,13 @@ class VideoDataSource: ObservableObject {
     @Published var playbackSpeedString: String = "1x"
     @Published var playbackSpeedUserSettingString: String = "1x"
 
-    @Published var showVideoList: Bool = true
-    @Published var showDebugPanel: Bool = true
-    @Published var showSlider: Bool = true
+    @AppStorage("showVideoList") var showVideoList: Bool = true
+    @AppStorage("showDebugPanel") var showDebugPanel: Bool = true
+    @AppStorage("showSlider") var showSlider: Bool = true
 
     @Published var windowTitle: String = "No videos loaded"
 
-    private var cancelSet: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = []
     private var formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 2
@@ -190,7 +191,7 @@ class VideoDataSource: ObservableObject {
             .sink { folderURL in
                 self.fetchFiles(atPath: folderURL.path(percentEncoded: false), withExtension: "mp4")
             }
-            .store(in: &cancelSet)
+            .store(in: &cancellables)
     }
 
     func fetchFiles(atPath path: String, withExtension fileExtension:String) {
@@ -202,7 +203,7 @@ class VideoDataSource: ObservableObject {
         var cameraAngleVideos = [String: [CameraAngleVideo]]()
 
         do {
-            let resourceKeys : [URLResourceKey] = [.creationDateKey, .isDirectoryKey]
+            let resourceKeys: [URLResourceKey] = [.creationDateKey, .isDirectoryKey]
             let enumerator = fileManager.enumerator(at: folderURL,
                                                             includingPropertiesForKeys: resourceKeys,
                                                             options: [.skipsHiddenFiles], errorHandler: { (url, error) -> Bool in
@@ -293,16 +294,6 @@ class VideoDataSource: ObservableObject {
 
     func addObservers() {
         removeObservers()
-
-        statusObserver = avPlayers.first?.publisher(for: \.status).sink(receiveValue: { [weak self] status in
-            guard let self else { return }
-            switch status {
-//                case .readyToPlay:
-//                    self.playing = true
-                default: break
-            }
-        })
-
         timeObserver = timeObserver(for: avPlayers.first)
     }
 
@@ -311,7 +302,6 @@ class VideoDataSource: ObservableObject {
             avPlayers.first?.removeTimeObserver(timeObserver)
             self.timeObserver = nil
         }
-        statusObserver?.cancel()
     }
 
     // Adds a time observer for updating the progress bar

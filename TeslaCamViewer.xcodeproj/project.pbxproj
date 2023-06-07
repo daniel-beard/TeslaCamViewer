@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,8 @@
 		2482D914227F65D000A20F1D /* Datasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D913227F65D000A20F1D /* Datasource.swift */; };
 		24CC880C229248EA00B5BF9C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24CC880B229248EA00B5BF9C /* Utils.swift */; };
 		2B73C8C42A22C10800458A73 /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B73C8C32A22C10800458A73 /* Slider.swift */; };
+		2B8B77E32A302BFB0043D5C8 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 2B8B77E22A302BFB0043D5C8 /* Sentry */; };
+		2B8B77E52A302BFB0043D5C8 /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2B8B77E42A302BFB0043D5C8 /* SentrySwiftUI */; };
 		2BE381642A14481500585D6A /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE381632A14481500585D6A /* MainView.swift */; };
 		2BE381662A1597E100585D6A /* VideoNameMatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE381652A1597E100585D6A /* VideoNameMatching.swift */; };
 /* End PBXBuildFile section */
@@ -51,7 +53,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2482D911227F657100A20F1D /* AVKit.framework in Frameworks */,
+				2B8B77E52A302BFB0043D5C8 /* SentrySwiftUI in Frameworks */,
 				2482D912227F657100A20F1D /* AVFoundation.framework in Frameworks */,
+				2B8B77E32A302BFB0043D5C8 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +121,10 @@
 			dependencies = (
 			);
 			name = TeslaCamViewer;
+			packageProductDependencies = (
+				2B8B77E22A302BFB0043D5C8 /* Sentry */,
+				2B8B77E42A302BFB0043D5C8 /* SentrySwiftUI */,
+			);
 			productName = TeslaCamViewer;
 			productReference = 2482D8FB227F627C00A20F1D /* TeslaCamViewer.app */;
 			productType = "com.apple.product-type.application";
@@ -128,7 +136,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1020;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1420;
 				ORGANIZATIONNAME = dbeard;
 				TargetAttributes = {
 					2482D8FA227F627C00A20F1D = {
@@ -150,6 +158,9 @@
 				Base,
 			);
 			mainGroup = 2482D8F2227F627C00A20F1D;
+			packageReferences = (
+				2B8B77E12A302BFB0043D5C8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+			);
 			productRefGroup = 2482D8FC227F627C00A20F1D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -213,6 +224,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -221,6 +233,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -274,6 +287,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -282,6 +296,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -306,13 +321,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/ThirdParty",
-				);
+				DEAD_CODE_STRIPPING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TeslaCamViewer/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -327,13 +342,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/ThirdParty",
-				);
+				DEAD_CODE_STRIPPING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TeslaCamViewer/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -366,6 +381,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2B8B77E12A302BFB0043D5C8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2B8B77E22A302BFB0043D5C8 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B8B77E12A302BFB0043D5C8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+		2B8B77E42A302BFB0043D5C8 /* SentrySwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B8B77E12A302BFB0043D5C8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = SentrySwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2482D8F3227F627C00A20F1D /* Project object */;
 }

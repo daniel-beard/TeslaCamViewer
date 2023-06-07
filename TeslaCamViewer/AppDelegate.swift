@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Sentry
 import SwiftUI
 
 @main
@@ -74,11 +75,10 @@ struct TeslaCamViewerApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-
-    }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+        SentrySDK.start { options in
+            options.dsn = "https://1ba3a17b63e5492bb577d60ff002ccda@o286260.ingest.sentry.io/1518726"
+            // options.debug = true
+        }
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {

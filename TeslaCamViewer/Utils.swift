@@ -7,10 +7,15 @@
 //
 
 import AppKit
+import SwiftUI
 
 // Constants
 extension Notification.Name {
     static let openVideoFolder = NSNotification.Name(rawValue: "OpenVideoFolder")
+}
+
+struct Colors {
+    static let defaultBackground = Color(red: 0.071, green: 0.069, blue: 0.122)
 }
 
 func dialogOKCancel(question: String, text: String) -> Bool {
