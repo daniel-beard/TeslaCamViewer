@@ -19,19 +19,34 @@ struct TeslaCamViewerApp: App {
     var body: some Scene {
         WindowGroup {
             MainView(dataSource: .constant(dataSource))
-        }.commands {
-            CommandGroup(after: CommandGroupPlacement.newItem) {
+                .frame(minWidth: 600, minHeight: 500)
+        }
+        .windowResizability(.contentSize)
+
+        .commands {
+            CommandGroup(after: .newItem) {
                 Button("Open") {
                     appDelegate.openDocument()
                 }.keyboardShortcut("o", modifiers: [])
+
+                Menu("Open Recent") {
+                    ForEach(NSDocumentController.shared.recentDocumentURLs, id: \.self) { folderURL in
+                        Button(action: {
+                            appDelegate.openFolder(folder: folderURL)
+                        }, label: {
+                            Text(folderURL.path(percentEncoded: false))
+                        })
+                    }
+                }
+                Divider()
             }
-            CommandGroup(after: CommandGroupPlacement.newItem) {
+            CommandGroup(after: .newItem) {
                 Button(dataSource.playing ? "Pause" : "Play") {
                     dataSource.playing.toggle()
                 }.keyboardShortcut(.space, modifiers: [])
 
                 Button("Rewind") {
-                    dataSource.seek(toPercentage: 0)
+                    dataSource.restartVideo()
                 }.keyboardShortcut("r", modifiers: [])
 
                 Button("Next Video") {
@@ -42,10 +57,6 @@ struct TeslaCamViewerApp: App {
                     dataSource.previousVideo()
                 }.keyboardShortcut("k", modifiers: [])
 
-                Button("Toggle Video Gravity") {
-                    dataSource.toggleVideoGravity()
-                }.keyboardShortcut("t", modifiers: [])
-
                 Button("Increase Playback Speed") {
                     dataSource.increasePlaybackSpeed()
                 }.keyboardShortcut("l", modifiers: [])
@@ -53,9 +64,11 @@ struct TeslaCamViewerApp: App {
                 Button("Decrease Playback Speed") {
                     dataSource.decreasePlaybackSpeed()
                 }.keyboardShortcut("h", modifiers: [])
+
+                Divider()
             }
 
-            CommandGroup(after: CommandGroupPlacement.newItem) {
+            CommandGroup(after: .toolbar) {
                 Button(dataSource.showVideoList ? "Hide video list" : "Show video list") {
                     dataSource.showVideoList.toggle()
                 }.keyboardShortcut("a", modifiers: [])
@@ -67,6 +80,12 @@ struct TeslaCamViewerApp: App {
                 Button(dataSource.showSlider ? "Hide progress slider" : "Show progress slider") {
                     dataSource.showSlider.toggle()
                 }.keyboardShortcut("s", modifiers: [])
+
+                Button("Toggle Video Gravity") {
+                    dataSource.toggleVideoGravity()
+                }.keyboardShortcut("t", modifiers: [])
+
+                Divider()
             }
         }
     }
@@ -77,7 +96,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         SentrySDK.start { options in
             options.dsn = "https://1ba3a17b63e5492bb577d60ff002ccda@o286260.ingest.sentry.io/1518726"
-            // options.debug = true
         }
     }
 
@@ -108,10 +126,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func openFolder(folder: URL) {
-        // Notify the data source
         NotificationCenter.default.post(name: .openVideoFolder, object: folder)
-        // Mark as recently opened
-        NSDocumentController.shared.noteNewRecentDocumentURL(folder)
     }
 }
 

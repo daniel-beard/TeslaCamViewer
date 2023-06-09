@@ -20,16 +20,9 @@ extension AVPlayerView {
 struct AVPlayerControllerRepresented: NSViewRepresentable {
 
     @Binding var player : AVPlayer?
-    @Binding var videoGravity: AVLayerVideoGravity
     @Binding var playing: Bool
     @Binding var playbackSpeed: PlaybackSpeed
-
-    init(player: Binding<AVPlayer?>, playing: Binding<Bool>, playbackSpeed: Binding<PlaybackSpeed>, videoGravity: Binding<AVLayerVideoGravity>) {
-        self._player = player
-        self._playing = playing
-        self._playbackSpeed = playbackSpeed
-        self._videoGravity = videoGravity
-    }
+    @Binding var videoGravity: AVLayerVideoGravity
 
     func makeNSView(context: Context) -> AVPlayerView {
         let view = AVPlayerView()
@@ -58,10 +51,8 @@ struct AVPlayerControllerRepresented: NSViewRepresentable {
 struct MainView: View {
 
     @Binding var dataSource: VideoDataSource
-
-    init(dataSource: Binding<VideoDataSource>) {
-        self._dataSource = dataSource
-    }
+    @State var showingToast: Bool = false
+    @State var toastLayout: ToastLayout = .none
 
     var body: some View {
         ZStack {
@@ -118,13 +109,6 @@ struct MainView: View {
                 }
                 // Progress slider
                 if dataSource.showSlider {
-//                    Slider(value: Binding(get: {
-//                        self.dataSource.progress
-//                    }, set: { (newValue) in
-//                        self.dataSource.progress = newValue
-//                        self.dataSource.seek(toPercentage: newValue)
-//                    }))
-//                }
                     CustomSlider(value: Binding(get: {
                         self.dataSource.progress
                     }, set: { (newValue) in
@@ -136,14 +120,9 @@ struct MainView: View {
                             ZStack {
                                 Circle().fill(Color.white)
                                 Circle().stroke(Color.black.opacity(0.2), lineWidth: 2)
-                                // TODODB: Crash is because of below commented out code. Not sure why, but just replace this with an image
-                                // Create your own SVG that is like https://fontawesome.com/icons/car-side-bolt?f=classic&s=solid and bolt.car.circle.fill
                                 Image("car_thumb")
                                     .resizable(resizingMode: .stretch)
-//                                    .frame(width: 44, height: 44)
                                     .foregroundColor(.red)
-//                                    .padding(1)
-//                                    .scaledToFill()
                             }
                             .padding([.top, .bottom], 1)
                             .modifier(modifiers.knob)
@@ -166,9 +145,33 @@ struct MainView: View {
                     Spacer()
                 }.padding(40)
             }
+
+            // Toast
+            if showingToast {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Toast(layout: $toastLayout)
+                    }
+                    Spacer()
+                }
+                .padding(40)
+                .transition(.opacity)
+                .zIndex(2)
+            }
         }
         .navigationTitle(dataSource.windowTitle)
         .background(Colors.defaultBackground)
+        .onChange(of: dataSource.lastAction) { newValue in
+            withoutAnimation {
+                self.showingToast = false
+                self.toastLayout = newValue.toastLayout
+                self.showingToast = true
+            }
+            withAnimation(.easeOut(duration: 0.8).delay(1)) {
+                showingToast.toggle()
+            }
+        }
     }
 }
 
@@ -185,9 +188,9 @@ struct DebugPanel: View {
         .font(.title)
         .padding(10)
         .frame(maxWidth: 230)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(.primary)
         .background(.ultraThinMaterial)
-        .clipShape(Capsule(style: .continuous))
+        .cornerRadius(10)
     }
 }
 

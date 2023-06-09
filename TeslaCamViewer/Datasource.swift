@@ -96,6 +96,30 @@ enum PlaybackSpeed: Float, CaseIterable {
     case x0 = 0, x0_25 = 0.25, x0_5 = 0.5, x1 = 1, x2 = 2, x5 = 5, x10 = 10, x20 = 20
 }
 
+enum AlertableAction {
+    case none
+    case play
+    case pause
+    case increasePlaybackSpeed
+    case decreasePlaybackSpeed
+    case nextVideo
+    case previousVideo
+    case restartVideo
+
+    var toastLayout: ToastLayout {
+        switch self {
+            case .none:     return .none
+            case .play:     return .image(Image(systemName: "play.circle"))
+            case .pause:    return .image(Image(systemName: "pause.circle"))
+            case .increasePlaybackSpeed: return .image(Image(systemName: "plus.circle"))
+            case .decreasePlaybackSpeed: return .image(Image(systemName: "minus.circle"))
+            case .nextVideo:             return .image(Image(systemName: "forward.end"))
+            case .previousVideo:         return .image(Image(systemName: "backward.end"))
+            case .restartVideo:          return .image(Image(systemName: "arrow.uturn.backward.circle"))
+        }
+    }
+}
+
 internal typealias DirectoryCrawlerCompletion = () -> Void
 
 class VideoDataSource: ObservableObject {
@@ -141,7 +165,13 @@ class VideoDataSource: ObservableObject {
 
     @Published var playing: Bool = false {
         didSet {
-            playbackSpeed = playing ? playbackSpeedUserSetting : .x0
+            if playing {
+                playbackSpeed = playbackSpeedUserSetting
+                lastAction = .play
+            } else {
+                playbackSpeed = .x0
+                lastAction = .pause
+            }
         }
     }
     @Published var videoGravity: AVLayerVideoGravity = .resizeAspectFill
@@ -172,6 +202,8 @@ class VideoDataSource: ObservableObject {
 
     @Published var windowTitle: String = "No videos loaded"
 
+    @Published var lastAction: AlertableAction = .none
+
     private var cancellables: Set<AnyCancellable> = []
     private var formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -189,22 +221,19 @@ class VideoDataSource: ObservableObject {
         NotificationCenter.default.publisher(for: .openVideoFolder)
             .compactMap { $0.object as? URL }
             .sink { folderURL in
-                self.fetchFiles(atPath: folderURL.path(percentEncoded: false), withExtension: "mp4")
+                self.fetchFiles(folderURL: folderURL, withExtension: "mp4")
             }
             .store(in: &cancellables)
     }
 
-    func fetchFiles(atPath path: String, withExtension fileExtension:String) {
-        let fileManager = FileManager.default
-        let folderURL = URL(fileURLWithPath: path, isDirectory: true)
-
+    func fetchFiles(folderURL: URL, withExtension fileExtension:String) {
         // For collecting all the videos, we'll key them by their canonical names
         // we'll transform this into a `[TeslaCamVideo]` sorted by creation date when done.
         var cameraAngleVideos = [String: [CameraAngleVideo]]()
 
         do {
             let resourceKeys: [URLResourceKey] = [.creationDateKey, .isDirectoryKey]
-            let enumerator = fileManager.enumerator(at: folderURL,
+            let enumerator = FileManager.default.enumerator(at: folderURL,
                                                             includingPropertiesForKeys: resourceKeys,
                                                             options: [.skipsHiddenFiles], errorHandler: { (url, error) -> Bool in
                                                                 print("directoryEnumerator error at \(url): ", error)
@@ -235,6 +264,10 @@ class VideoDataSource: ObservableObject {
             )
         }
 
+        if !result.isEmpty {
+            NSDocumentController.shared.noteNewRecentDocumentURL(folderURL)
+        }
+
         self.videos = result.sorted(by: { $0.creationDate < $1.creationDate })
         self.currentIndex = 0
     }
@@ -263,6 +296,7 @@ class VideoDataSource: ObservableObject {
         let nextIndex = currentPlaybackSpeedIndex.advanced(by: 1)
         guard playbackSpeeds.indices.contains(nextIndex) else { return }
         playbackSpeedUserSetting = playbackSpeeds[nextIndex]
+        lastAction = .increasePlaybackSpeed
         if playing {
             playbackSpeed = playbackSpeedUserSetting
         }
@@ -274,9 +308,15 @@ class VideoDataSource: ObservableObject {
         let nextIndex = currentPlaybackSpeedIndex.advanced(by: -1)
         guard playbackSpeeds.indices.contains(nextIndex) else { return }
         playbackSpeedUserSetting = playbackSpeeds[nextIndex]
+        lastAction = .decreasePlaybackSpeed
         if playing {
             playbackSpeed = playbackSpeedUserSetting
         }
+    }
+
+    func restartVideo() {
+        seek(toPercentage: 0)
+        lastAction = .restartVideo
     }
 
     func avPlayer(forURL url: URL?) -> AVPlayer? {
