@@ -189,7 +189,7 @@ class VideoDataSource: ObservableObject {
     /// 0...1
     @Published var progress: Double = 0 {
         didSet {
-            progressString = formatter.string(from: progress as NSNumber) ?? "unknown"
+            progressString = "\(formatter.string(from: progress * 100 as NSNumber) ?? "unknown")%"
         }
     }
     @Published var progressString: String = "unknown"
@@ -207,7 +207,7 @@ class VideoDataSource: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     private var formatter: NumberFormatter = {
         let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 2
+        formatter.maximumFractionDigits = 0
         return formatter
     }()
 
