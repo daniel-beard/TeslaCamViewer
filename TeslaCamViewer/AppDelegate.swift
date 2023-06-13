@@ -8,34 +8,104 @@
 
 import Cocoa
 import Sentry
+import SwiftUI
 
-@NSApplicationMain
+@main
+struct TeslaCamViewerApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
+    @StateObject var dataSource = VideoDataSource()
+
+    var body: some Scene {
+        WindowGroup {
+            MainView(dataSource: .constant(dataSource))
+                .frame(minWidth: 600, minHeight: 500)
+        }
+        .windowResizability(.contentSize)
+
+        .commands {
+            CommandGroup(after: .newItem) {
+                Button("Open") {
+                    appDelegate.openDocument()
+                }.keyboardShortcut("o", modifiers: [])
+
+                Menu("Open Recent") {
+                    ForEach(NSDocumentController.shared.recentDocumentURLs, id: \.self) { folderURL in
+                        Button(action: {
+                            appDelegate.openFolder(folder: folderURL)
+                        }, label: {
+                            Text(folderURL.path(percentEncoded: false))
+                        })
+                    }
+                }
+                Divider()
+            }
+            CommandGroup(after: .newItem) {
+                Button(dataSource.playing ? "Pause" : "Play") {
+                    dataSource.playing.toggle()
+                }.keyboardShortcut(.space, modifiers: [])
+
+                Button("Rewind") {
+                    dataSource.restartVideo()
+                }.keyboardShortcut("r", modifiers: [])
+
+                Button("Next Video") {
+                    dataSource.nextVideo()
+                }.keyboardShortcut("j", modifiers: [])
+
+                Button("Previous Video") {
+                    dataSource.previousVideo()
+                }.keyboardShortcut("k", modifiers: [])
+
+                Button("Increase Playback Speed") {
+                    dataSource.increasePlaybackSpeed()
+                }.keyboardShortcut("l", modifiers: [])
+
+                Button("Decrease Playback Speed") {
+                    dataSource.decreasePlaybackSpeed()
+                }.keyboardShortcut("h", modifiers: [])
+
+                Divider()
+            }
+
+            CommandGroup(after: .toolbar) {
+                Button(dataSource.showVideoList ? "Hide video list" : "Show video list") {
+                    dataSource.showVideoList.toggle()
+                }.keyboardShortcut("a", modifiers: [])
+
+                Button(dataSource.showDebugPanel ? "Hide debug panel" : "Show debug panel") {
+                    dataSource.showDebugPanel.toggle()
+                }.keyboardShortcut("d", modifiers: [])
+
+                Button(dataSource.showSlider ? "Hide progress slider" : "Show progress slider") {
+                    dataSource.showSlider.toggle()
+                }.keyboardShortcut("s", modifiers: [])
+
+                Button("Toggle Video Gravity") {
+                    dataSource.toggleVideoGravity()
+                }.keyboardShortcut("t", modifiers: [])
+
+                Divider()
+            }
+        }
+    }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-
-        // Crash reporting setup
-        do {
-            Client.shared = try Client(dsn: "https://1ba3a17b63e5492bb577d60ff002ccda@sentry.io/1518726")
-            try Client.shared?.startCrashHandler()
-        } catch let error {
-            print("\(error)")
+        SentrySDK.start { options in
+            options.dsn = "https://1ba3a17b63e5492bb577d60ff002ccda@o286260.ingest.sentry.io/1518726"
         }
-    }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
         openFolder(folder: urls.first!)
     }
 
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return true
-    }
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 
-    @IBAction func openDocument(_ sender: Any?) {
+    func openDocument() {
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseDirectories = true
@@ -49,18 +119,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    func application(_ sender: NSApplication, openFile filename: String) -> Bool {
+        let url = URL(fileURLWithPath: filename)
+        openFolder(folder: url)
+        return true
+    }
+
     func openFolder(folder: URL) {
-        let directoryCrawler = DirectoryCrawler(fileURL: folder)
-        if directoryCrawler.hasVideos {
-            // Notify our controller.
-            NotificationCenter.default.post(name: didOpenVideoNotification,
-                                            object: directoryCrawler)
-            // Mark as recently opened
-            NSDocumentController.shared.noteNewRecentDocumentURL(folder)
-        } else {
-            let _ = dialogOK(messageText: "Could not find any tesla cam videos in selected folder",
-                             infoText: "Try opening a different folder")
-        }
+        NotificationCenter.default.post(name: .openVideoFolder, object: folder)
     }
 }
 

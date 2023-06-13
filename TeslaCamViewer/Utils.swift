@@ -7,9 +7,16 @@
 //
 
 import AppKit
+import SwiftUI
 
 // Constants
-let didOpenVideoNotification = NSNotification.Name(rawValue: "DidOpenVideoFolder")
+extension Notification.Name {
+    static let openVideoFolder = NSNotification.Name(rawValue: "OpenVideoFolder")
+}
+
+struct Colors {
+    static let defaultBackground = Color(red: 0.071, green: 0.069, blue: 0.122)
+}
 
 func dialogOKCancel(question: String, text: String) -> Bool {
     let alert = NSAlert()
@@ -43,4 +50,13 @@ func dialogRemoveVideos(countOfItems: Int, window: NSWindow, result: @escaping (
     }
 }
 
+extension View {
+    func withoutAnimation(action: @escaping () -> Void) {
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            action()
+        }
+    }
+}
 

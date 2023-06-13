@@ -3,21 +3,22 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		24796FD922EE7C1000713DF3 /* IndeterminateProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24796FD822EE7C1000713DF3 /* IndeterminateProgressView.swift */; };
-		24796FDB22F23D0E00713DF3 /* Sentry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24796FDA22F23D0E00713DF3 /* Sentry.framework */; };
-		24796FDE22F23ED200713DF3 /* Sentry.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 24796FDA22F23D0E00713DF3 /* Sentry.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2482D8FF227F627C00A20F1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D8FE227F627C00A20F1D /* AppDelegate.swift */; };
-		2482D901227F627C00A20F1D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D900227F627C00A20F1D /* ViewController.swift */; };
 		2482D903227F627E00A20F1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2482D902227F627E00A20F1D /* Assets.xcassets */; };
-		2482D906227F627E00A20F1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2482D904227F627E00A20F1D /* Main.storyboard */; };
 		2482D911227F657100A20F1D /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2482D90F227F657100A20F1D /* AVKit.framework */; };
 		2482D912227F657100A20F1D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2482D910227F657100A20F1D /* AVFoundation.framework */; };
-		2482D914227F65D000A20F1D /* DirectoryCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D913227F65D000A20F1D /* DirectoryCrawler.swift */; };
+		2482D914227F65D000A20F1D /* Datasource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2482D913227F65D000A20F1D /* Datasource.swift */; };
 		24CC880C229248EA00B5BF9C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24CC880B229248EA00B5BF9C /* Utils.swift */; };
+		2B73C8C42A22C10800458A73 /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B73C8C32A22C10800458A73 /* Slider.swift */; };
+		2B8B77E32A302BFB0043D5C8 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 2B8B77E22A302BFB0043D5C8 /* Sentry */; };
+		2B8B77E52A302BFB0043D5C8 /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2B8B77E42A302BFB0043D5C8 /* SentrySwiftUI */; };
+		2B90E5ED2A315CE60077FFB3 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B90E5EC2A315CE60077FFB3 /* Toast.swift */; };
+		2BE381642A14481500585D6A /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE381632A14481500585D6A /* MainView.swift */; };
+		2BE381662A1597E100585D6A /* VideoNameMatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE381652A1597E100585D6A /* VideoNameMatching.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,26 +28,25 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				24796FDE22F23ED200713DF3 /* Sentry.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		24796FD822EE7C1000713DF3 /* IndeterminateProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndeterminateProgressView.swift; sourceTree = "<group>"; };
-		24796FDA22F23D0E00713DF3 /* Sentry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sentry.framework; path = ThirdParty/Sentry.framework; sourceTree = "<group>"; };
 		2482D8FB227F627C00A20F1D /* TeslaCamViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TeslaCamViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2482D8FE227F627C00A20F1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2482D900227F627C00A20F1D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2482D902227F627E00A20F1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2482D905227F627E00A20F1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2482D907227F627E00A20F1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2482D908227F627E00A20F1D /* TeslaCamViewer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TeslaCamViewer.entitlements; sourceTree = "<group>"; };
 		2482D90F227F657100A20F1D /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		2482D910227F657100A20F1D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		2482D913227F65D000A20F1D /* DirectoryCrawler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryCrawler.swift; sourceTree = "<group>"; };
+		2482D913227F65D000A20F1D /* Datasource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Datasource.swift; sourceTree = "<group>"; };
 		24CC880B229248EA00B5BF9C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		2B73C8C32A22C10800458A73 /* Slider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slider.swift; sourceTree = "<group>"; };
+		2B90E5EC2A315CE60077FFB3 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		2BE381632A14481500585D6A /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		2BE381652A1597E100585D6A /* VideoNameMatching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoNameMatching.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,22 +55,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				2482D911227F657100A20F1D /* AVKit.framework in Frameworks */,
-				24796FDB22F23D0E00713DF3 /* Sentry.framework in Frameworks */,
+				2B8B77E52A302BFB0043D5C8 /* SentrySwiftUI in Frameworks */,
 				2482D912227F657100A20F1D /* AVFoundation.framework in Frameworks */,
+				2B8B77E32A302BFB0043D5C8 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		24796FD322EE7A7A00713DF3 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				24796FD822EE7C1000713DF3 /* IndeterminateProgressView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		2482D8F2227F627C00A20F1D = {
 			isa = PBXGroup;
 			children = (
@@ -91,13 +84,14 @@
 		2482D8FD227F627C00A20F1D /* TeslaCamViewer */ = {
 			isa = PBXGroup;
 			children = (
-				24796FD322EE7A7A00713DF3 /* Views */,
 				2482D8FE227F627C00A20F1D /* AppDelegate.swift */,
-				2482D900227F627C00A20F1D /* ViewController.swift */,
-				2482D913227F65D000A20F1D /* DirectoryCrawler.swift */,
+				2482D913227F65D000A20F1D /* Datasource.swift */,
+				2BE381652A1597E100585D6A /* VideoNameMatching.swift */,
 				24CC880B229248EA00B5BF9C /* Utils.swift */,
+				2BE381632A14481500585D6A /* MainView.swift */,
+				2B90E5EC2A315CE60077FFB3 /* Toast.swift */,
+				2B73C8C32A22C10800458A73 /* Slider.swift */,
 				2482D902227F627E00A20F1D /* Assets.xcassets */,
-				2482D904227F627E00A20F1D /* Main.storyboard */,
 				2482D907227F627E00A20F1D /* Info.plist */,
 				2482D908227F627E00A20F1D /* TeslaCamViewer.entitlements */,
 			);
@@ -107,7 +101,6 @@
 		2482D90E227F657100A20F1D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				24796FDA22F23D0E00713DF3 /* Sentry.framework */,
 				2482D910227F657100A20F1D /* AVFoundation.framework */,
 				2482D90F227F657100A20F1D /* AVKit.framework */,
 			);
@@ -131,6 +124,10 @@
 			dependencies = (
 			);
 			name = TeslaCamViewer;
+			packageProductDependencies = (
+				2B8B77E22A302BFB0043D5C8 /* Sentry */,
+				2B8B77E42A302BFB0043D5C8 /* SentrySwiftUI */,
+			);
 			productName = TeslaCamViewer;
 			productReference = 2482D8FB227F627C00A20F1D /* TeslaCamViewer.app */;
 			productType = "com.apple.product-type.application";
@@ -142,7 +139,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1020;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1420;
 				ORGANIZATIONNAME = dbeard;
 				TargetAttributes = {
 					2482D8FA227F627C00A20F1D = {
@@ -164,6 +161,9 @@
 				Base,
 			);
 			mainGroup = 2482D8F2227F627C00A20F1D;
+			packageReferences = (
+				2B8B77E12A302BFB0043D5C8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+			);
 			productRefGroup = 2482D8FC227F627C00A20F1D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -179,7 +179,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2482D903227F627E00A20F1D /* Assets.xcassets in Resources */,
-				2482D906227F627E00A20F1D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,26 +189,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24796FD922EE7C1000713DF3 /* IndeterminateProgressView.swift in Sources */,
-				2482D901227F627C00A20F1D /* ViewController.swift in Sources */,
+				2BE381662A1597E100585D6A /* VideoNameMatching.swift in Sources */,
 				2482D8FF227F627C00A20F1D /* AppDelegate.swift in Sources */,
-				2482D914227F65D000A20F1D /* DirectoryCrawler.swift in Sources */,
+				2482D914227F65D000A20F1D /* Datasource.swift in Sources */,
+				2BE381642A14481500585D6A /* MainView.swift in Sources */,
+				2B73C8C42A22C10800458A73 /* Slider.swift in Sources */,
 				24CC880C229248EA00B5BF9C /* Utils.swift in Sources */,
+				2B90E5ED2A315CE60077FFB3 /* Toast.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		2482D904227F627E00A20F1D /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2482D905227F627E00A20F1D /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		2482D909227F627E00A20F1D /* Debug */ = {
@@ -238,6 +228,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -246,6 +237,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -263,7 +255,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -299,6 +291,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -307,6 +300,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -318,7 +312,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -331,13 +325,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/ThirdParty",
-				);
+				DEAD_CODE_STRIPPING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TeslaCamViewer/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -352,13 +346,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/ThirdParty",
-				);
+				DEAD_CODE_STRIPPING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TeslaCamViewer/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -391,6 +385,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2B8B77E12A302BFB0043D5C8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2B8B77E22A302BFB0043D5C8 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B8B77E12A302BFB0043D5C8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+		2B8B77E42A302BFB0043D5C8 /* SentrySwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B8B77E12A302BFB0043D5C8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = SentrySwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2482D8F3227F627C00A20F1D /* Project object */;
 }
