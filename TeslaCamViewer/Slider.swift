@@ -77,11 +77,12 @@ struct CustomSlider<Component: View>: View {
     }
 
     private func onDragChange(_ drag: DragGesture.Value,_ frame: CGRect) {
-        let frameWidth = frame.size.width
-        let knobWidth = knobWidth ?? frameWidth
-        let xrange = (min: Double(0), max: Double(frameWidth - knobWidth))
-        var value = Double(drag.startLocation.x + drag.translation.width) - (0.5 * knobWidth)
-        value = min(max(value, xrange.min), xrange.max)
+        let width = (knob: Double(knobWidth ?? frame.size.height), view: Double(frame.size.width))
+        let xrange = (min: Double(0), max: Double(width.view - width.knob))
+        var value = Double(drag.startLocation.x + drag.translation.width)
+        value -= 0.5 * width.knob
+        value = value > xrange.max ? xrange.max : value
+        value = value < xrange.min ? xrange.min : value
         value = value.convert(fromRange: (xrange.min, xrange.max), toRange: range)
         self.value = value
     }
